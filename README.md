@@ -38,7 +38,7 @@ cmake --build .
 > Sørg for at du har raylib's afhængigheder (f.eks. X11, OpenGL, pthread på Linux)
 
 ## 📁 Projektstruktur
-
+```text
 PiratePlatformer/
 ├── src/          # Spilkode i C
 ├── resources/    # Grafikker, lyde osv.
@@ -46,6 +46,7 @@ PiratePlatformer/
 ├── external/     # raylib (submodul)
 ├── build/        # Midlertidig build-mappe
 └── CMakeLists.txt
+```
 
 ## 🏗️ Inspiration
 
