@@ -1,0 +1,39 @@
+# Build output
+/build/
+
+# CMake genererede filer
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Raylib submodulets build (men ikke selve kildekoden)
+external/raylib/build/
+external/raylib/CMakeFiles/
+external/raylib/CMakeCache.txt
+external/raylib/cmake_install.cmake
+external/raylib/Makefile
+
+# IDE og editor midlertidige filer
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Binære outputfiler
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.a
+*.lib
+
+# Logs og cache
+*.log
+
+# VSCode / JetBrains / CLion
+.vscode/
+.idea/
+
