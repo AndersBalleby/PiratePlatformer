@@ -7,6 +7,10 @@ add_subdirectory(external/raylib)
 
 add_executable(${PROJECT_NAME}
   src/main.c
+  src/game.c 
+  src/game.h 
+  src/level.c 
+  src/level.h
 )
 
 target_link_libraries(${PROJECT_NAME}

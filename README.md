@@ -20,21 +20,22 @@ Spillet er under udvikling, og formålet er både at eksperimentere med:
 
 ## 📦 Installation
 ### 1. Klon projektet og submoduler
-
+```code
 git clone --recurse-submodules https://github.com/AndersBalleby/PiratePlatformer.git
 cd PiratePlatformer
+```
 
 ### 2. Byg med CMake
-
+```code
 mkdir build
 cd build
 cmake ..
 cmake --build .
-
+```
 ### 3. Kør spillet
-
+```code
 ./Pirate_Platformer
-
+```
 > Sørg for at du har raylib's afhængigheder (f.eks. X11, OpenGL, pthread på Linux)
 
 ## 📁 Projektstruktur
@@ -53,5 +54,6 @@ PiratePlatformer/
 Projektet er inspireret af:
 - Clear Code's Python platformer: https://github.com/clear-code-projects/2D-Mario-style-platformer
 - raylib eksempler og dokumentation: https://github.com/raysan5/raylib
+
 
 
