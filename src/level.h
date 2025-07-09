@@ -9,12 +9,13 @@
 
 typedef struct Level {
   int id;
-  TileGroup *tiles;
+  Tile* tiles; // todo: refactor til TileGroup senere
+  int tiles_size;
 } Level;
 
-// Heap allokering
 Level initLevel(int id);
 void drawLevel(Level *lvl);
+void destroyLevel(Level *lvl);
 
 bool validatePath(const char *path);
 int readCSVToMap(const char *filename, int rows, int cols, int map[rows][cols]);

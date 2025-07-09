@@ -16,5 +16,7 @@ typedef struct Game {
 } Game;
 
 Game initGame(void);
+void destroyGame(Game *game);
 bool runGame(Game *game);
 void drawMap(Game *game);
+

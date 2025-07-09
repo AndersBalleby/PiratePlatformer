@@ -31,4 +31,10 @@ bool runGame(Game *game) { // Main game loop
   return true;
 }
 
-void drawMap(Game *game) {}
+void drawMap(Game *game) {
+ drawLevel(&game->current_level); 
+}
+
+void destroyGame(Game *game) {
+  destroyLevel(&game->current_level);
+}

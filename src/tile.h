@@ -11,6 +11,7 @@ typedef struct Tile {
 
 typedef struct TileGroup {
   Tile tiles[MAX_TILES];
+  int tiles_size;
 } TileGroup;
 
 

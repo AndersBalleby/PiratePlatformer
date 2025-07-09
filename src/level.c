@@ -7,27 +7,56 @@
 
 Level initLevel(int id) {
   int dataSize = 0;
-  
+
   int map[ROWS][COLS];
-  
+
   // Indlæs CSV og tjek alle values.
   // Todo at lave videre her
-  if(readCSVToMap("../levels/0/level_0_terrain.csv", ROWS, COLS, map)) {
-    for(int i = 0; i < ROWS; ++i) {
-      for(int j = 0; j < COLS; ++j) {
-        int value = map[i][j];
-        printf("%d", value);
-      }
-      printf("\n");
+  Texture2D terrain_tiles[16];
+  Image terrain_img = LoadImage("../resources/terrain/terrain_tiles.png");
+  int x = 0;
+  for(int i = 0; i < 4; ++i) {
+    for(int j = 0; j < 4; ++j) {
+      terrain_tiles[x++] = LoadTextureFromImage(ImageFromImage(terrain_img, (Rectangle) {
+        .height = TILE_SIZE,
+        .width = TILE_SIZE,
+        .x = j * TILE_SIZE,
+        .y = i * TILE_SIZE
+      }));
     }
   }
 
-  return (Level) {.id = id, .tiles = NULL};
+  Tile* tiles = (Tile *) malloc(sizeof(Tile) * MAX_TILES);
+  if(tiles == NULL) {
+    return (Level) {.id = -1, .tiles = NULL, .tiles_size = 0};
+  }
+
+  x = 0;
+  if (readCSVToMap("../levels/0/level_0_terrain.csv", ROWS, COLS, map)) {
+    for (int i = 0; i < ROWS; ++i) {
+      for (int j = 0; j < COLS; ++j) {
+        int value = map[i][j];
+        if (value != -1) {
+          tiles[x++] = (Tile) {.texture = terrain_tiles[value], .pos = (Vector2) {.x = j * TILE_SIZE, .y = i * TILE_SIZE} };
+        }
+      }
+    }
+  }
+
+  return (Level){.id = id, .tiles = tiles, .tiles_size = x};
+}
+
+void drawLevel(Level *lvl) {
+  Tile _tile;
+  for(int i = 0; i < lvl->tiles_size; ++i) {
+    _tile = lvl->tiles[i];
+    DrawTexture(_tile.texture, _tile.pos.x, _tile.pos.y, WHITE);
+  }
 }
 
 #define MAX_LINE_LENGTH 1024
 int readCSVToMap(const char *filename, int rows, int cols,
-                  int map[rows][cols]) {
+                 int map[rows][cols]) {
   FILE *file = fopen(filename, "r");
   if (!file) {
     perror("Fejl ved åbning af fil");
@@ -70,6 +99,13 @@ int readCSVToMap(const char *filename, int rows, int cols,
   return 1;
 }
 
-bool validatePath(const char *path) {
-  return access(path, F_OK) == 0;
+void destroyLevel(Level *lvl) {
+  TraceLog(LOG_INFO, "[FREE] Level uinitialiseres");
+  for(int i = 0; i < lvl->tiles_size; ++i) {
+    UnloadTexture(lvl->tiles[i].texture);
+  }
+
+  free(lvl->tiles);
 }
+
+bool validatePath(const char *path) { return access(path, F_OK) == 0; }
