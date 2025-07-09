@@ -15,20 +15,19 @@ Level initLevel(int id) {
   Texture2D terrain_tiles[16];
   Image terrain_img = LoadImage("../resources/terrain/terrain_tiles.png");
   int x = 0;
-  for(int i = 0; i < 4; ++i) {
-    for(int j = 0; j < 4; ++j) {
-      terrain_tiles[x++] = LoadTextureFromImage(ImageFromImage(terrain_img, (Rectangle) {
-        .height = TILE_SIZE,
-        .width = TILE_SIZE,
-        .x = j * TILE_SIZE,
-        .y = i * TILE_SIZE
-      }));
+  for (int i = 0; i < 4; ++i) {
+    for (int j = 0; j < 4; ++j) {
+      terrain_tiles[x++] = LoadTextureFromImage(
+          ImageFromImage(terrain_img, (Rectangle){.height = TILE_SIZE,
+                                                  .width = TILE_SIZE,
+                                                  .x = j * TILE_SIZE,
+                                                  .y = i * TILE_SIZE}));
     }
   }
 
-  Tile* tiles = (Tile *) malloc(sizeof(Tile) * MAX_TILES);
-  if(tiles == NULL) {
-    return (Level) {.id = -1, .tiles = NULL, .tiles_size = 0};
+  Tile *tiles = (Tile *)malloc(sizeof(Tile) * MAX_TILES);
+  if (tiles == NULL) {
+    return (Level){.id = -1, .tiles = NULL, .tiles_size = 0};
   }
 
   x = 0;
@@ -37,7 +36,9 @@ Level initLevel(int id) {
       for (int j = 0; j < COLS; ++j) {
         int value = map[i][j];
         if (value != -1) {
-          tiles[x++] = (Tile) {.texture = terrain_tiles[value], .pos = (Vector2) {.x = j * TILE_SIZE, .y = i * TILE_SIZE} };
+          tiles[x++] =
+              (Tile){.texture = terrain_tiles[value],
+                     .pos = (Vector2){.x = j * TILE_SIZE, .y = i * TILE_SIZE}};
         }
       }
     }
@@ -48,7 +49,7 @@ Level initLevel(int id) {
 
 void drawLevel(Level *lvl) {
   Tile _tile;
-  for(int i = 0; i < lvl->tiles_size; ++i) {
+  for (int i = 0; i < lvl->tiles_size; ++i) {
     _tile = lvl->tiles[i];
     DrawTexture(_tile.texture, _tile.pos.x, _tile.pos.y, WHITE);
   }
@@ -100,12 +101,28 @@ int readCSVToMap(const char *filename, int rows, int cols,
 }
 
 void destroyLevel(Level *lvl) {
-  TraceLog(LOG_INFO, "[FREE] Level uinitialiseres");
-  for(int i = 0; i < lvl->tiles_size; ++i) {
-    UnloadTexture(lvl->tiles[i].texture);
-  }
+    TraceLog(LOG_INFO, "[FREE] Level uinitialiseres");
 
-  free(lvl->tiles);
+    int unloaded_ids[lvl->tiles_size];
+    int x = 0;
+    /* Dette skal ændres når resourcemanager bliver lavet */
+    for (int i = 0; i < lvl->tiles_size; ++i) {
+        bool found = false;
+        for (int j = 0; j < x; ++j) {
+            if (unloaded_ids[j] == lvl->tiles[i].texture.id) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            UnloadTexture(lvl->tiles[i].texture);
+            unloaded_ids[x++] = lvl->tiles[i].texture.id;
+        }
+    }
+
+    free(lvl->tiles);
 }
+
 
 bool validatePath(const char *path) { return access(path, F_OK) == 0; }

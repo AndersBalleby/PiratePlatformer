@@ -31,6 +31,8 @@ int main(void) {
 
       EndDrawing();
     }
+
+    destroyGame(&game);
   }
 
   CloseWindow();
