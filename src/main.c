@@ -10,7 +10,7 @@ int main(void) {
   InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
   SetTargetFPS(60);
 
-  TraceLog(LOG_INFO, "Indlæser spillet");
+  TraceLog(LOG_INFO, "[MAIN] Indlæser spillet");
 
   // Init game & assets
   Game game = initGame();

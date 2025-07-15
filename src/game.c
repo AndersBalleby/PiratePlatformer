@@ -2,14 +2,16 @@
 #include "level.h"
 #include <raylib.h>
 
-#define START_LEVEL 0
 
 Game initGame() {
-  TraceLog(LOG_INFO, "Indstiller game state og current level");
+  const int START_LEVEL = 0;
+  TraceLog(LOG_INFO, "[GAME] Indstiller game state og current level");
+  TraceLog(LOG_INFO, "[GAME] Current Level : \"%d\"", START_LEVEL);
 
   Level current_level = initLevel(START_LEVEL);
+  
   if (current_level.id == -1) { // Tjek for fejl under level initialisering
-    TraceLog(LOG_ERROR, "Fejl under initialisering af level 0");
+    TraceLog(LOG_ERROR, "[GAME] Fejl under initialisering af level 0");
 
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
@@ -22,7 +24,7 @@ Game initGame() {
 
 bool runGame(Game *game) { // Main game loop
   if (game->game_state == GAMESTATE_ERROR) {
-    TraceLog(LOG_ERROR, "Afslutter spil (GAMESTATE_ERROR)");
+    TraceLog(LOG_ERROR, "[GAME] Afslutter spil (GAMESTATE_ERROR)");
     return false; // exit game fra main loop
   }
 

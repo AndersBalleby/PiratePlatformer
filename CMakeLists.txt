@@ -11,6 +11,12 @@ add_executable(${PROJECT_NAME}
   src/game.h 
   src/level.c 
   src/level.h
+  src/resources.h
+  src/resources.c
+  src/files.c
+  src/files.h
+  src/tile.c
+  src/tile.h
 )
 
 target_link_libraries(${PROJECT_NAME}

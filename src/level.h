@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tile.h"
+#include "resources.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

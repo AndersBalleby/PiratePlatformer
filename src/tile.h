@@ -1,11 +1,12 @@
 #pragma once
 
+#include "resources.h"
 #include <raylib.h>
 
 #define MAX_TILES 1000
 
 typedef struct Tile {
-  Texture2D texture;
+  Resource *resource;
   Vector2 pos;
 } Tile;
 
@@ -15,7 +16,7 @@ typedef struct TileGroup {
 } TileGroup;
 
 
-Tile createTile(Texture2D texture, Vector2 pos);
+Tile createTile(const char *id, Vector2 pos);
 TileGroup createTileGroup();
 
 void drawTile(Tile *tile);
