@@ -40,6 +40,8 @@ Resource *loadResource(const char *id, Texture2D texture) {
 
       rs_collection.resources[i].texture = texture;
       rs_collection.resources[i].is_loaded = true;
+
+      TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
       return &rs_collection.resources[i];
     }
   }
@@ -51,6 +53,7 @@ Resource *loadResource(const char *id, Texture2D texture) {
       rs_collection.resources[i].id = strdup(id);
       rs_collection.resources[i].texture = texture;
       rs_collection.resources[i].is_loaded = true;
+      TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
       return &rs_collection.resources[i];
     }
   }
@@ -63,6 +66,7 @@ Resource *loadResource(const char *id, Texture2D texture) {
         .is_loaded = true,
     };
 
+    TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
     return &rs_collection.resources[rs_collection.size - 1];
   }
 
@@ -75,7 +79,7 @@ Resource *loadResource(const char *id, Texture2D texture) {
 }
 
 /* int size er antallet af tiles / sprites fra et billede. Eksempel: 16 = 4x4 */
-Spritesheet *loadSpritesheet(const char *id, const char *file_path, int size) {
+Spritesheet *loadSpritesheet(const char *id, const char *file_path, int width, int height) {
   if (id == NULL || file_path == NULL) {
     TraceLog(LOG_ERROR, "[RESOURCES] Parametrene 'id' og 'file_path' i "
                         "funktionen \"loadSpritesheet\" må ikke være NULL");
@@ -87,11 +91,11 @@ Spritesheet *loadSpritesheet(const char *id, const char *file_path, int size) {
     return NULL;
   }
 
-  Spritesheet spsheet = {.id = strdup(id)};
+  Spritesheet spsheet = {.id = strdup(id), .size = 0};
 
   Image spsheet_image = LoadImage(file_path);
-  for (int i = 0; i < (size / TILE_SIZE); ++i) {
-    for (int j = 0; j < (size / TILE_SIZE); ++j) {
+  for (int i = 0; i < (height / TILE_SIZE); ++i) {
+    for (int j = 0; j < (width / TILE_SIZE); ++j) {
 
       Rectangle img_rect = (Rectangle){
           .height = TILE_SIZE,
@@ -104,10 +108,13 @@ Spritesheet *loadSpritesheet(const char *id, const char *file_path, int size) {
 
       char dest[128];
       snprintf(dest, sizeof(dest), "%s_%d", id, spsheet.size);
-
+      
       Resource *res = loadResource(dest, LoadTextureFromImage(sprite_img));
       if (res != NULL && spsheet.size < MAX_SPRITESHEET_RESOURCES) {
         spsheet.resources[spsheet.size++] = res;
+      } else {
+        TraceLog(LOG_ERROR, "[RESOURCES] Kunne ikke indlæse texture fra billede");
+        return NULL;
       }
 
       UnloadImage(sprite_img);
@@ -176,6 +183,7 @@ void unloadAllResources() {
   }
 
   rs_collection.size = 0;
+  TraceLog(LOG_INFO, "[RESOURCES] Alle resources er blevet unloadet");
 }
 
 void unloadAllSpritesheets() {

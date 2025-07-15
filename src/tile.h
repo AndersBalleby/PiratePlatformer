@@ -3,7 +3,7 @@
 #include "resources.h"
 #include <raylib.h>
 
-#define MAX_TILES 1000
+#define MAX_TILES 150
 
 typedef struct Tile {
   Resource *resource;
@@ -11,12 +11,12 @@ typedef struct Tile {
 } Tile;
 
 typedef struct TileGroup {
+  const char *id;
   Tile tiles[MAX_TILES];
   int tiles_size;
 } TileGroup;
 
 
 Tile createTile(const char *id, Vector2 pos);
-TileGroup createTileGroup();
 
 void drawTile(Tile *tile);

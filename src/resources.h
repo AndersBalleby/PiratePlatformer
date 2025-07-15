@@ -41,7 +41,7 @@ void unloadResourceByID(const char *id);
 void unloadAllResources();
 
 /* SPRITESHEETS */
-Spritesheet *loadSpritesheet(const char *id, const char *file_path, int size);
+Spritesheet *loadSpritesheet(const char *id, const char *file_path, int width, int height);
 Spritesheet *getSpritesheet(const char *id);
 
 void unloadSpritesheet(Spritesheet *spsheet);
