@@ -1,6 +1,9 @@
 #include "entity.h"
+#include "files.h"
+#include "paths.h"
 #include "resources.h"
 #include <raylib.h>
+#include <stdio.h>
 
 Entity createEntity(EntityType type) {
   // TODO : Ændre spawn position 
@@ -28,7 +31,7 @@ Entity createEntity(EntityType type) {
         .width = rs->texture.width,
         .height = rs->texture.height,
       };
-
+      
       ret.speed = PLAYER_SPEED;
       ret.health = PLAYER_MAX_HEALTH;
       ret.rs = rs;
@@ -109,6 +112,30 @@ void jump(Player *player) {
 void applyGravity(Player *player) {
   player->entity.direction.y += player->gravity;
   player->entity.collision_rect.y += player->entity.direction.y;
+}
+
+#define ROWS 11 // Antal rows i CSV
+#define COLS 60 // Antal cols i CSV
+Vector2 getPlayerSpawnPos(int level_id) {
+  int map[ROWS][COLS];
+  
+  char buffer[128];
+  snprintf(buffer, sizeof(buffer), CSV_PATH_PLAYER_SPAWN, level_id, level_id);
+
+  if(readCSVToMap(buffer, ROWS, COLS, map)) {
+    for(size_t i = 0; i < ROWS; ++i) {
+      for(size_t j = 0; j < COLS; ++j) {
+        int value = map[i][j];
+        
+        if(value != -1) {
+          return (Vector2) { .x = j * TILE_SIZE, .y = i * TILE_SIZE };
+        }
+      }
+    }
+  }
+
+  TraceLog(LOG_WARNING, "[ENTITY] Kunne ikke finde en spawn position for player i level: \"%d\"");
+  return (Vector2) { .x = 0, .y = 0 };
 }
 
 void drawEntity(Entity *entity) {

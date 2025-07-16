@@ -1,8 +1,9 @@
 #pragma once
 
 /* CSV FILER */
-#define CSV_PATH_TERRAIN "../levels/%d/level_%d_terrain.csv"
-#define CSV_PATH_GRASS "../levels/%d/level_%d_grass.csv"
+#define CSV_PATH_TERRAIN      "../levels/%d/level_%d_terrain.csv"
+#define CSV_PATH_GRASS        "../levels/%d/level_%d_grass.csv"
+#define CSV_PATH_PLAYER_SPAWN "../levels/%d/level_%d_player.csv"
 
 
 /* SPRITESHEET FILER */

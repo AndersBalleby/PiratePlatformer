@@ -28,6 +28,7 @@ typedef enum EntityType {
 
 typedef struct Entity {
   Resource *rs;
+  Vector2 spawn_position;
   Vector2 position;
   Vector2 direction;
   Rectangle collision_rect;
@@ -54,7 +55,7 @@ void updateEntity(Entity *entity);
 
 /* PLAYER */
 void updatePlayer(Player *player);
-Vector2 getPlayerSpawnPos();
+Vector2 getPlayerSpawnPos(int level_id);
 
 /* Input & Physics */
 void getPlayerInput(Player *player);

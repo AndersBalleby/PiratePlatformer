@@ -21,11 +21,10 @@ bool loadResources() {
 }
 
 Game initGame() {
-  const int START_LEVEL = 0;
+  const int START_LEVEL = 1;
 
   TraceLog(LOG_INFO, "[GAME] Indstiller game state og current level");
-  TraceLog(LOG_INFO, "[GAME] Current Level : \"%d\"", START_LEVEL);
-  
+  TraceLog(LOG_INFO, "[GAME] Nuværende Level: \"%d\"", START_LEVEL); 
   TraceLog(LOG_INFO, "[GAME] Indlæser resources");
   if(!loadResources()) {
     TraceLog(LOG_ERROR, "[GAME] Kunne ikke indlæse alle resources, afbryder init");
@@ -38,7 +37,7 @@ Game initGame() {
 
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
-
+  
   Player player = {
     .entity = createEntity(PLAYER),
     .on_ground = false,
@@ -47,6 +46,10 @@ Game initGame() {
     .gravity = PLAYER_GRAVITY,
     .state = PLAYER_STATE_IDLE,
   };
+  
+  Vector2 spawn_player = getPlayerSpawnPos(current_level.id);
+  player.entity.collision_rect.x = spawn_player.x;
+  player.entity.collision_rect.y = spawn_player.y;
 
   if(player.entity.rs == NULL) {
     TraceLog(LOG_ERROR, "[GAME] Kunne ikke oprette en player entity");
