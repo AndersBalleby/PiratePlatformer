@@ -1,21 +1,19 @@
 # 🏴☠️ Pirate Platformer
 
+> ⚠️ **Projektet er stadig under udvikling!** Dette er et læringsprojekt, og der tilføjes løbende nye funktioner og forbedringer.
+
 Et simpelt 2D platformer-spil skrevet i **C** med [**raylib**](https://www.raylib.com/).  
 Projektet er lavet som en læringsrejse i C-programmering og spiludvikling – med inspiration fra [Clear Code's 2D Mario-style platformer](https://github.com/clear-code-projects/2D-Mario-style-platformer) skrevet i Python.
 
 ## 🎮 Om spillet
 
 I **Pirate Platformer** spiller du som en pirat, der hopper gennem klassiske platformer-baner, undgår farer og måske finder skjulte skatte.  
-Spillet er under udvikling, og formålet er både at eksperimentere med:
-
-- Grundlæggende game loop i C  
-- Brug af raylib til rendering, input og kollisionsdetektion  
-- Egne dataformater til fx baner eller assets  
+Spillet er under udvikling, og formålet er at opnå en bedre forståelse i C
 
 ## 🧰 Teknologier
 
-- **C** – lavniveau programmering og læring  
-- **raylib** – simpel og kraftfuld C-baseret game framework  
+- **C** – programmering og læring  
+- **raylib** – simpelt C-baseret game framework  
 - **CMake** – til build og projektstruktur  
 
 ## 📦 Installation
@@ -55,5 +53,9 @@ Projektet er inspireret af:
 - Clear Code's Python platformer: https://github.com/clear-code-projects/2D-Mario-style-platformer
 - raylib eksempler og dokumentation: https://github.com/raysan5/raylib
 
+## ℹ️  Brug af AI 
+
+Alle former for kunstig intelligens er kun brugt som skriveassistent til denne README.  
+Alt kode og design er lavet manuelt med mindre andet er angivet.
 
 
