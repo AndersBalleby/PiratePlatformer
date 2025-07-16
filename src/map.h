@@ -13,7 +13,6 @@ typedef struct Map {
 Map createMap(int level_id);
 
 void registerTileGroup(const char *group_id, const char *csv_path, TileGroup *out_group);
-bool registerSpritesheets(); 
 
 /* Rendering */
 void drawMap(Map *map);

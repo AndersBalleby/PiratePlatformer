@@ -12,7 +12,7 @@
 
 /* ENEMY STATS */
 #define ENEMY_MAX_HEALTH 1
-
+#define ENEMY_SPEED 5.0f
 
 typedef enum PlayerState {
   PLAYER_STATE_IDLE,
@@ -54,6 +54,7 @@ void updateEntity(Entity *entity);
 
 /* PLAYER */
 void updatePlayer(Player *player);
+Vector2 getPlayerSpawnPos();
 
 /* Input & Physics */
 void getPlayerInput(Player *player);

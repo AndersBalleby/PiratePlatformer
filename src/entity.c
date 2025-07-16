@@ -3,8 +3,7 @@
 #include <raylib.h>
 
 Entity createEntity(EntityType type) {
-  // TODO : Ændre spawn position
-  
+  // TODO : Ændre spawn position 
   Vector2 pos = { .x = 0, .y = 0};
   Entity ret = {
     .type = type,
@@ -36,16 +35,24 @@ Entity createEntity(EntityType type) {
       
       break;
 
-    case ENEMY:
-      
+    case ENEMY: 
       rs = getResource("enemy");
       if(rs == NULL) {
         TraceLog(LOG_ERROR, "[ENTITY] Kunne ikke finde resource til enemy entity");
         return (Entity) { .rs = NULL };
       }
+      
+      ret.collision_rect = (Rectangle) {
+        .x = pos.x,
+        .y = pos.y,
+        .width = rs->texture.width,
+        .height = rs->texture.height,
+      };
 
+      ret.speed = ENEMY_SPEED;
       ret.health = ENEMY_MAX_HEALTH;
       ret.rs = rs;
+
       break;
     default:
       TraceLog(LOG_ERROR, "[ENTITY] Kunne ikke oprette ukendt entity type: \"%d\"", type);
@@ -103,8 +110,6 @@ void applyGravity(Player *player) {
   player->entity.direction.y += player->gravity;
   player->entity.collision_rect.y += player->entity.direction.y;
 }
-
-
 
 void drawEntity(Entity *entity) {
   if(entity == NULL) return;

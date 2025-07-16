@@ -21,6 +21,7 @@ add_executable(${PROJECT_NAME}
   src/map.h
   src/entity.c 
   src/entity.h
+  src/paths.h
 )
 
 target_link_libraries(${PROJECT_NAME}

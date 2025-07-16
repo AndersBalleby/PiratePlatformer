@@ -15,6 +15,7 @@ int main(void) {
   // Init game & assets
   Game game = initGame();
 
+  const bool show_fps = true;
   if (game.game_state == GAMESTATE_ERROR || game.current_level.id == -1) {
     TraceLog(LOG_ERROR, "Fejl under initialisering af game");
     TraceLog(LOG_ERROR, "Afslutter programmet");
@@ -27,8 +28,10 @@ int main(void) {
         break;
       }
 
-      ClearBackground(BLACK);
+      if(show_fps)
+        DrawFPS(20, 20);
 
+      ClearBackground(BLACK);
       EndDrawing();
     }
 

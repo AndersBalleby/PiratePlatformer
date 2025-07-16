@@ -20,6 +20,9 @@ typedef struct Game {
   int entity_count;
 } Game;
 
+/* Resources */
+bool loadResources();
+
 /* Game Logik */
 Game initGame(void);
 

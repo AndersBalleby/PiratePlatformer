@@ -1,26 +1,44 @@
 #include "game.h"
 #include "entity.h"
 #include "level.h"
+#include "paths.h"
 #include "resources.h"
 #include "tile.h"
 #include <raylib.h>
 
+bool loadResources() {
+  /* Load alle single resources */
+  if(loadResource("player", LoadTexture(SPRITE_PLAYER)) == NULL) {
+    return false;
+  }
+  
+  /* Load alle spritesheets */
+  if (loadSpritesheet("terrain", SPRITESHEET_TERRAIN, 256, 256) == NULL ||
+      loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64) == NULL)
+    return false;
+
+  return true;
+}
 
 Game initGame() {
   const int START_LEVEL = 0;
 
   TraceLog(LOG_INFO, "[GAME] Indstiller game state og current level");
   TraceLog(LOG_INFO, "[GAME] Current Level : \"%d\"", START_LEVEL);
-
-  Level current_level = initLevel(START_LEVEL);
   
+  TraceLog(LOG_INFO, "[GAME] Indlæser resources");
+  if(!loadResources()) {
+    TraceLog(LOG_ERROR, "[GAME] Kunne ikke indlæse alle resources, afbryder init");
+    return (Game) {.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
+  }
+
+  Level current_level = initLevel(START_LEVEL); 
   if (current_level.id == -1) { // Tjek for fejl under level initialisering
     TraceLog(LOG_ERROR, "[GAME] Fejl under initialisering af level 0");
 
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
 
-  loadResource("player", LoadTexture("../resources/character/idle/1.png"));
   Player player = {
     .entity = createEntity(PLAYER),
     .on_ground = false,

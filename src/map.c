@@ -1,17 +1,18 @@
 #include "map.h"
+#include "paths.h"
+#include <stdio.h>
 
 Map createMap(int level_id) {
   /* Load resources and spritesheets */
-  if (!registerSpritesheets()) {
-    TraceLog(LOG_ERROR,
-             "[MAP] Var ikke i stand til at registrere alle spritesheets");
-    return (Map){};
-  }
-
+  char buffer_path[128]; // Buffer til filstier ud fra level_id
+  
   TileGroup terrain_group = {};
+  snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_TERRAIN, level_id, level_id);
+  registerTileGroup("terrain", buffer_path, &terrain_group);
+  
   TileGroup grass_group = {};
-  registerTileGroup("terrain", "../levels/0/level_0_terrain.csv", &terrain_group);
-  registerTileGroup("grass", "../levels/0/level_0_grass.csv", &grass_group);
+  snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_GRASS, level_id, level_id);
+  registerTileGroup("grass", buffer_path, &grass_group);
 
   return (Map){
     .level_id = level_id,
@@ -20,16 +21,8 @@ Map createMap(int level_id) {
   };
 }
 
-bool registerSpritesheets() {
-  if (loadSpritesheet("terrain", "../resources/terrain/terrain_tiles.png", 256, 256) == NULL ||
-      loadSpritesheet("grass", "../resources/decoration/grass/grass.png", 320, 64) == NULL)
-    return false;
-
-  return true;
-}
-
-#define ROWS 11
-#define COLS 60
+#define ROWS 11 // Antal rows i CSV
+#define COLS 60 // Antal cols i CSV
 void registerTileGroup(const char *group_id, const char *csv_path,
                        TileGroup *out_group) {
   Tile tiles[MAX_TILES];
