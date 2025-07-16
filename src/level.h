@@ -3,6 +3,7 @@
 #include "tile.h"
 #include "resources.h"
 #include "files.h"
+#include "map.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,17 +12,15 @@
 
 typedef struct Level {
   int id;
-  TileGroup collision_tiles;
-  TileGroup decoration_tiles;
+  Map map;
 } Level;
 
-/* Init level */
+/* Init */
 Level initLevel(int id);
-bool registerTileGroup(const char *group_id, const char *csv_path, TileGroup *destination);
-bool registerSpritesheets();
 
+/* Drawing */
 void drawLevel(Level *lvl);
 
-/* Cleanup Level */
+/* Cleanup */
 void destroyLevel(Level *lvl);
 

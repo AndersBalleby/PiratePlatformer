@@ -28,12 +28,12 @@ bool runGame(Game *game) { // Main game loop
     return false; // exit game fra main loop
   }
 
-  drawMap(game);
+  drawGame(game);
 
   return true;
 }
 
-void drawMap(Game *game) {
+void drawGame(Game *game) {
  drawLevel(&game->current_level); 
 }
 

@@ -18,5 +18,5 @@ typedef struct Game {
 Game initGame(void);
 void destroyGame(Game *game);
 bool runGame(Game *game);
-void drawMap(Game *game);
+void drawGame(Game *game);
 
