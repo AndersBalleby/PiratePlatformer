@@ -5,6 +5,7 @@
 // Kan kun benyttes gennem funktioner fra resources.h
 static ResourceCollection rs_collection;
 static SpritesheetCollection spsheet_collection;
+static AnimationCollection anim_collection;
 
 /*
  * Finder resource ved at loope igennem og tjekke manuelt alle ids
@@ -41,7 +42,8 @@ Resource *loadResource(const char *id, Texture2D texture) {
       rs_collection.resources[i].texture = texture;
       rs_collection.resources[i].is_loaded = true;
 
-      //TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
+      // TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\"
+      // successfuldt", id);
       return &rs_collection.resources[i];
     }
   }
@@ -53,7 +55,8 @@ Resource *loadResource(const char *id, Texture2D texture) {
       rs_collection.resources[i].id = strdup(id);
       rs_collection.resources[i].texture = texture;
       rs_collection.resources[i].is_loaded = true;
-      //TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
+      // TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\"
+      // successfuldt", id);
       return &rs_collection.resources[i];
     }
   }
@@ -66,7 +69,8 @@ Resource *loadResource(const char *id, Texture2D texture) {
         .is_loaded = true,
     };
 
-    //TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
+    // TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\"
+    // successfuldt", id);
     return &rs_collection.resources[rs_collection.size - 1];
   }
 
@@ -79,7 +83,8 @@ Resource *loadResource(const char *id, Texture2D texture) {
 }
 
 /* int size er antallet af tiles / sprites fra et billede. Eksempel: 16 = 4x4 */
-Spritesheet *loadSpritesheet(const char *id, const char *file_path, int width, int height) {
+Spritesheet *loadSpritesheet(const char *id, const char *file_path, int width,
+                             int height) {
   if (id == NULL || file_path == NULL) {
     TraceLog(LOG_ERROR, "[RESOURCES] Parametrene 'id' og 'file_path' i "
                         "funktionen \"loadSpritesheet\" må ikke være NULL");
@@ -108,12 +113,13 @@ Spritesheet *loadSpritesheet(const char *id, const char *file_path, int width, i
 
       char dest[128];
       snprintf(dest, sizeof(dest), "%s_%d", id, spsheet.size);
-      
+
       Resource *res = loadResource(dest, LoadTextureFromImage(sprite_img));
       if (res != NULL && spsheet.size < MAX_SPRITESHEET_RESOURCES) {
         spsheet.resources[spsheet.size++] = res;
       } else {
-        TraceLog(LOG_ERROR, "[RESOURCES] Kunne ikke indlæse texture fra billede");
+        TraceLog(LOG_ERROR,
+                 "[RESOURCES] Kunne ikke indlæse texture fra billede");
         return NULL;
       }
 
@@ -145,8 +151,63 @@ Spritesheet *getSpritesheet(const char *id) {
   return NULL;
 }
 
+Animation *loadAnimation(const char *id, const char *dir_path) {
+  if(id == NULL || dir_path == NULL) {
+    TraceLog(LOG_ERROR, "[RESOURCES] Mangler id og/eller dir_path til loadAnimation()");
+    return NULL;
+  }
+
+  FilePathList fp_list = LoadDirectoryFiles(dir_path);
+  if (fp_list.count <= 0) {
+    TraceLog(LOG_ERROR,
+             "[RESOURCES] Kunne ikke indlæse animationer for id: \"%s\" "
+             "dir_path: %s",
+             id, dir_path);
+    return NULL;
+  }
+
+  Resource *rs_arr[MAX_ANIMATION_LENGTH];
+  size_t count = 0;
+  char id_buffer[128];
+  for (size_t i = 0; i < fp_list.count; ++i) {
+    if(count >= MAX_ANIMATION_LENGTH) {
+      TraceLog(LOG_WARNING, "[RESOURCES] Opnået maks antal frames for animation \"%s\"", id);
+      break;
+    }
+
+    snprintf(id_buffer, sizeof(id_buffer), "%s_%zu", id, i);
+
+    rs_arr[count++] = loadResource(id_buffer, LoadTexture(fp_list.paths[i]));
+  }
+
+  Animation anim = {
+    .id = strdup(id),
+    .count = count,
+  };
+  memcpy(anim.resources, rs_arr, count * sizeof(Resource *));
+
+  anim_collection.animations[anim_collection.count++] = anim;
+
+  return &anim_collection.animations[anim_collection.count - 1];
+}
+
+Animation *getAnimation(const char *id) { 
+  if(id == NULL) {
+    TraceLog(LOG_ERROR, "[RESOURCES] id må ikke være NULL (getAnimation)");
+    return NULL;
+  }
+
+  for(size_t i = 0; i < anim_collection.count; ++i) {
+    if(strcmp(anim_collection.animations[i].id, id) == 0) {
+      return &anim_collection.animations[i];
+    }
+  }
+
+  return NULL;
+}
+
 void unloadSpritesheet(Spritesheet *spsheet) {
-  for(int i = 0; i < spsheet->size; ++i) {
+  for (int i = 0; i < spsheet->size; ++i) {
     unloadResource(spsheet->resources[i]);
   }
 
@@ -178,7 +239,7 @@ void unloadResource(Resource *resource) {
 }
 
 void unloadAllResources() {
-  for(int i = 0; i < rs_collection.size; ++i) {
+  for (int i = 0; i < rs_collection.size; ++i) {
     unloadResource(&rs_collection.resources[i]);
   }
 
@@ -187,7 +248,7 @@ void unloadAllResources() {
 }
 
 void unloadAllSpritesheets() {
-  for(int i = 0; i < spsheet_collection.size; ++i) {
+  for (int i = 0; i < spsheet_collection.size; ++i) {
     unloadSpritesheet(&spsheet_collection.spritesheets[i]);
   }
 

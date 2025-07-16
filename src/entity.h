@@ -9,6 +9,7 @@
 #define PLAYER_GRAVITY 0.8f
 #define PLAYER_SPEED 8.0f
 #define PLAYER_MAX_HEALTH 5
+#define PLAYER_ANIMATION_SPEED 0.15f
 
 /* ENEMY STATS */
 #define ENEMY_MAX_HEALTH 1
@@ -27,12 +28,13 @@ typedef enum EntityType {
 } EntityType;
 
 typedef struct Entity {
-  Resource *rs;
+  Animation *animation;
   Vector2 spawn_position;
   Vector2 position;
   Vector2 direction;
   Rectangle collision_rect;
   float speed;
+  int animation_index;
   bool on_right;
   int health;
   EntityType type;

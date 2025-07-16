@@ -32,6 +32,19 @@ typedef struct SpritesheetCollection {
   int size;
 } SpritesheetCollection;
 
+#define MAX_ANIMATION_LENGTH 7 
+typedef struct Animation {
+  char *id;
+  Resource *resources[MAX_ANIMATION_LENGTH];
+  size_t count;
+} Animation;
+
+#define MAX_ANIMATIONS 10
+typedef struct AnimationCollection {
+  Animation animations[MAX_ANIMATIONS];
+  size_t count;
+} AnimationCollection;
+
 /* RESOURCES */
 Resource *loadResource(const char *id, Texture2D texture);
 Resource *getResource(const char *id);
@@ -46,3 +59,7 @@ Spritesheet *getSpritesheet(const char *id);
 
 void unloadSpritesheet(Spritesheet *spsheet);
 void unloadSpritesheetByID(const char *id);
+
+/* ANIMATIONS */
+Animation *loadAnimation(const char *id, const char *dir_path);
+Animation *getAnimation(const char *id);

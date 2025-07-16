@@ -15,51 +15,35 @@ Entity createEntity(EntityType type) {
     .on_right = true,
   };
 
-  Resource *rs = NULL;
+  Animation *animation = NULL;
   switch (type) {
     case PLAYER:
 
-      rs = getResource("player");
-      if(rs == NULL) {
-        TraceLog(LOG_ERROR, "[ENTITY] Kunne ikke finde resource til player entity");
-        return (Entity) { .rs = NULL };
+      animation = getAnimation("player_run");
+      if(animation == NULL) {
+        TraceLog(LOG_ERROR, "[ENTITY] Kunne ikke finde animation til player entity");
+        return (Entity) { .animation = NULL };
       }
 
       ret.collision_rect = (Rectangle) {
         .x = pos.x,
         .y = pos.y,
-        .width = rs->texture.width,
-        .height = rs->texture.height,
+        .width = animation->resources[0]->texture.width,
+        .height = animation->resources[0]->texture.height,
       };
       
       ret.speed = PLAYER_SPEED;
       ret.health = PLAYER_MAX_HEALTH;
-      ret.rs = rs;
+      ret.animation_index = 0;
+      ret.animation = animation;
       
       break;
-
     case ENEMY: 
-      rs = getResource("enemy");
-      if(rs == NULL) {
-        TraceLog(LOG_ERROR, "[ENTITY] Kunne ikke finde resource til enemy entity");
-        return (Entity) { .rs = NULL };
-      }
-      
-      ret.collision_rect = (Rectangle) {
-        .x = pos.x,
-        .y = pos.y,
-        .width = rs->texture.width,
-        .height = rs->texture.height,
-      };
-
-      ret.speed = ENEMY_SPEED;
-      ret.health = ENEMY_MAX_HEALTH;
-      ret.rs = rs;
-
+      // Todo
       break;
     default:
       TraceLog(LOG_ERROR, "[ENTITY] Kunne ikke oprette ukendt entity type: \"%d\"", type);
-      return (Entity) { .rs = NULL };
+      return (Entity) { .animation = NULL };
   }
 
   return ret;
@@ -141,6 +125,6 @@ Vector2 getPlayerSpawnPos(int level_id) {
 void drawEntity(Entity *entity) {
   if(entity == NULL) return;
 
-  DrawTexture(entity->rs->texture, entity->position.x, entity->position.y, WHITE);
+  DrawTexture(entity->animation->resources[(int) entity->animation_index]->texture, entity->position.x, entity->position.y, WHITE);
 }
 

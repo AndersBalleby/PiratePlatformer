@@ -17,11 +17,15 @@ bool loadResources() {
       loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64) == NULL)
     return false;
 
+  if(loadAnimation("player_run", "../resources/character/run/") == NULL) {
+    return false;
+  }
+
   return true;
 }
 
 Game initGame() {
-  const int START_LEVEL = 1;
+  const int START_LEVEL = 1; 
 
   TraceLog(LOG_INFO, "[GAME] Indstiller game state og current level");
   TraceLog(LOG_INFO, "[GAME] Nuværende Level: \"%d\"", START_LEVEL); 
@@ -46,12 +50,13 @@ Game initGame() {
     .gravity = PLAYER_GRAVITY,
     .state = PLAYER_STATE_IDLE,
   };
-  
+ 
+  /* Set player spawn pos */
   Vector2 spawn_player = getPlayerSpawnPos(current_level.id);
   player.entity.collision_rect.x = spawn_player.x;
   player.entity.collision_rect.y = spawn_player.y;
 
-  if(player.entity.rs == NULL) {
+  if(player.entity.animation == NULL) {
     TraceLog(LOG_ERROR, "[GAME] Kunne ikke oprette en player entity");
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
