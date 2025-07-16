@@ -10,8 +10,7 @@ Map createMap(int level_id) {
 
   TileGroup terrain_group = {};
   TileGroup grass_group = {};
-  registerTileGroup("terrain", "../levels/0/level_0_terrain.csv",
-                    &terrain_group);
+  registerTileGroup("terrain", "../levels/0/level_0_terrain.csv", &terrain_group);
   registerTileGroup("grass", "../levels/0/level_0_grass.csv", &grass_group);
 
   return (Map){
@@ -32,7 +31,7 @@ bool registerSpritesheets() {
 #define ROWS 11
 #define COLS 60
 void registerTileGroup(const char *group_id, const char *csv_path,
-                       TileGroup *destination) {
+                       TileGroup *out_group) {
   Tile tiles[MAX_TILES];
   int tiles_size = 0;
 
@@ -56,10 +55,9 @@ void registerTileGroup(const char *group_id, const char *csv_path,
     }
   }
 
-  destination->id = group_id;
-  destination->tiles_size = tiles_size;
-
-  memcpy(destination->tiles, tiles, sizeof(Tile) * tiles_size);
+  out_group->id = group_id;
+  out_group->tiles_size = tiles_size;
+  memcpy(out_group->tiles, tiles, sizeof(Tile) * tiles_size);
 }
 
 void drawMap(Map *map) {

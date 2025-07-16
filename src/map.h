@@ -2,6 +2,7 @@
 
 #include "tile.h"
 #include "files.h"
+
 typedef struct Map {
   int level_id;
   TileGroup collision_tiles;

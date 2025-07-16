@@ -1,0 +1,62 @@
+#pragma once
+
+#include "resources.h"
+#include <raylib.h>
+
+/* PLAYER STATS */
+#define PLAYER_JUMP_SPEED    -16
+#define PLAYER_JUMP_COOLDOWN 0.20f
+#define PLAYER_GRAVITY 0.8f
+#define PLAYER_SPEED 8.0f
+#define PLAYER_MAX_HEALTH 5
+
+/* ENEMY STATS */
+#define ENEMY_MAX_HEALTH 1
+
+
+typedef enum PlayerState {
+  PLAYER_STATE_IDLE,
+  PLAYER_STATE_RUNNING,
+  PLAYER_STATE_FALLING,
+  PLAYER_STATE_JUMPING,
+} PlayerState;
+
+typedef enum EntityType {
+  PLAYER,
+  ENEMY,
+} EntityType;
+
+typedef struct Entity {
+  Resource *rs;
+  Vector2 position;
+  Vector2 direction;
+  Rectangle collision_rect;
+  float speed;
+  bool on_right;
+  int health;
+  EntityType type;
+} Entity;
+
+typedef struct Player {
+  Entity entity; /* Indeholder members fra entity */
+  bool on_ground;
+  bool on_ceiling;
+  float last_jump_time;
+  float gravity;
+  PlayerState state;
+} Player;
+
+
+/* ENTITY */
+Entity createEntity(EntityType type);
+void drawEntity(Entity *entity);
+void updateEntity(Entity *entity);
+
+/* PLAYER */
+void updatePlayer(Player *player);
+
+/* Input & Physics */
+void getPlayerInput(Player *player);
+void jump(Player *player);
+void applyGravity(Player *player);
+void updatePlayerState(Player *player);

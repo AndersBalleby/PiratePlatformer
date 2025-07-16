@@ -41,7 +41,7 @@ Resource *loadResource(const char *id, Texture2D texture) {
       rs_collection.resources[i].texture = texture;
       rs_collection.resources[i].is_loaded = true;
 
-      TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
+      //TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
       return &rs_collection.resources[i];
     }
   }
@@ -53,7 +53,7 @@ Resource *loadResource(const char *id, Texture2D texture) {
       rs_collection.resources[i].id = strdup(id);
       rs_collection.resources[i].texture = texture;
       rs_collection.resources[i].is_loaded = true;
-      TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
+      //TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
       return &rs_collection.resources[i];
     }
   }
@@ -66,7 +66,7 @@ Resource *loadResource(const char *id, Texture2D texture) {
         .is_loaded = true,
     };
 
-    TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
+    //TraceLog(LOG_INFO, "[RESOURCES] Registreret resource med id \"%s\" successfuldt", id);
     return &rs_collection.resources[rs_collection.size - 1];
   }
 

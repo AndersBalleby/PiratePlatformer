@@ -9,9 +9,17 @@ Tile createTile(const char *id, Vector2 pos) {
     return (Tile) { .resource = NULL, .pos = {}};
   }
 
+  Rectangle collision_rect = {
+    .x = pos.x,
+    .y = pos.y,
+    .width = rs->texture.width,
+    .height = rs->texture.height,
+  };
+
   return (Tile) {
     .resource = rs,
-    .pos = pos
+    .pos = pos,
+    .collision_rect = collision_rect,
   };
 }
 

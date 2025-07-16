@@ -19,6 +19,8 @@ add_executable(${PROJECT_NAME}
   src/tile.h
   src/map.c
   src/map.h
+  src/entity.c 
+  src/entity.h
 )
 
 target_link_libraries(${PROJECT_NAME}

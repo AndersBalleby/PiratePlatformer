@@ -8,6 +8,7 @@
 typedef struct Tile {
   Resource *resource;
   Vector2 pos;
+  Rectangle collision_rect;
 } Tile;
 
 typedef struct TileGroup {
