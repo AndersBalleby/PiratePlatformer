@@ -9,7 +9,7 @@
 #define PLAYER_GRAVITY 0.8f
 #define PLAYER_SPEED 8.0f
 #define PLAYER_MAX_HEALTH 5
-#define PLAYER_ANIMATION_SPEED 0.15f
+#define PLAYER_ANIMATION_SPEED 0.13
 
 /* ENEMY STATS */
 #define ENEMY_MAX_HEALTH 1
@@ -34,13 +34,14 @@ typedef struct Entity {
   Vector2 direction;
   Rectangle collision_rect;
   float speed;
-  int animation_index;
+  float animation_index;
   bool on_right;
   int health;
   EntityType type;
 } Entity;
 
 typedef struct Player {
+  Animation *animations[4]; //idle, running, falling, jumping
   Entity entity; /* Indeholder members fra entity */
   bool on_ground;
   bool on_ceiling;
@@ -54,13 +55,16 @@ typedef struct Player {
 Entity createEntity(EntityType type);
 void drawEntity(Entity *entity);
 void updateEntity(Entity *entity);
+void animateEntity(Entity *entity);
 
 /* PLAYER */
 void updatePlayer(Player *player);
 Vector2 getPlayerSpawnPos(int level_id);
+void drawPlayer(Player *player);
 
 /* Input & Physics */
 void getPlayerInput(Player *player);
 void jump(Player *player);
 void applyGravity(Player *player);
 void updatePlayerState(Player *player);
+void animatePlayer(Player *player);

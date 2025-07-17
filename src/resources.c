@@ -1,5 +1,7 @@
 #include "resources.h"
+#include "files.h"
 #include <raylib.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Kan kun benyttes gennem funktioner fra resources.h
@@ -169,6 +171,9 @@ Animation *loadAnimation(const char *id, const char *dir_path) {
   Resource *rs_arr[MAX_ANIMATION_LENGTH];
   size_t count = 0;
   char id_buffer[128];
+  
+  /* Sorter alle filer i numerisk rækkefølge */
+  qsort(fp_list.paths, fp_list.count, sizeof(char *), compareFilePaths);
   for (size_t i = 0; i < fp_list.count; ++i) {
     if(count >= MAX_ANIMATION_LENGTH) {
       TraceLog(LOG_WARNING, "[RESOURCES] Opnået maks antal frames for animation \"%s\"", id);

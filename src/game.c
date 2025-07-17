@@ -17,7 +17,10 @@ bool loadResources() {
       loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64) == NULL)
     return false;
 
-  if(loadAnimation("player_run", "../resources/character/run/") == NULL) {
+  if(loadAnimation("player_run", "../resources/character/run") == NULL ||
+     loadAnimation("player_idle", "../resources/character/idle") == NULL ||
+     loadAnimation("player_fall", "../resources/character/fall") == NULL ||
+     loadAnimation("player_jump", "../resources/character/jump") == NULL) {
     return false;
   }
 
@@ -56,6 +59,12 @@ Game initGame() {
   player.entity.collision_rect.x = spawn_player.x;
   player.entity.collision_rect.y = spawn_player.y;
 
+  /* Set player animations */ 
+  player.animations[PLAYER_STATE_IDLE] = getAnimation("player_idle");
+  player.animations[PLAYER_STATE_RUNNING] = getAnimation("player_run");
+  player.animations[PLAYER_STATE_FALLING] = getAnimation("player_fall");
+  player.animations[PLAYER_STATE_JUMPING] = getAnimation("player_jump");
+
   if(player.entity.animation == NULL) {
     TraceLog(LOG_ERROR, "[GAME] Kunne ikke oprette en player entity");
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
@@ -89,11 +98,6 @@ bool runGame(Game *game) { // Main game loop
 
 void drawGame(Game *game) {
  drawLevel(&game->current_level); 
-}
-
-void drawPlayer(Player *player) {
-  if(player == NULL) return;
-  drawEntity(&player->entity);
 }
 
 void drawEntities(Game *game) {

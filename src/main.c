@@ -3,10 +3,11 @@
 #include "game.h"
 
 #define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 728
+#define WINDOW_HEIGHT 800
 #define WINDOW_TITLE "Pirate Platformer"
 
 int main(void) {
+  SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
   InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
   SetTargetFPS(60);
 

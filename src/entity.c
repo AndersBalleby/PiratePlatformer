@@ -2,6 +2,7 @@
 #include "files.h"
 #include "paths.h"
 #include "resources.h"
+#include <math.h>
 #include <raylib.h>
 #include <stdio.h>
 
@@ -52,6 +53,7 @@ Entity createEntity(EntityType type) {
 void updatePlayer(Player *player) {
   getPlayerInput(player);
   updatePlayerState(player);
+  animatePlayer(player);
 
   player->entity.position.x = player->entity.collision_rect.x;
   player->entity.position.y = player->entity.collision_rect.y;
@@ -71,6 +73,17 @@ void getPlayerInput(Player *player) {
   if((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && player->on_ground) {
     jump(player);
   }
+}
+
+void animateEntity(Entity *entity) {
+  TraceLog(LOG_FATAL, "[ENTITY] animateEntity er ikke implementeret endnu");
+}
+
+static int maxFrames[] = {5, 6, 1, 3};
+void animatePlayer(Player *player) {
+  player->entity.animation = player->animations[player->state];
+
+  player->entity.animation_index = fmod(player->entity.animation_index + PLAYER_ANIMATION_SPEED, maxFrames[player->state]);  
 }
 
 void updatePlayerState(Player *player) {
@@ -122,9 +135,25 @@ Vector2 getPlayerSpawnPos(int level_id) {
   return (Vector2) { .x = 0, .y = 0 };
 }
 
+void drawPlayer(Player *player) {
+  int tallest_frame_height = 56;
+  Texture2D current_texture = player->entity.animation->resources[(int) player->entity.animation_index]->texture;
+  int y_offset = tallest_frame_height - current_texture.height;
+
+  Vector2 screen_pos = {player->entity.position.x,
+                        player->entity.position.y + y_offset};
+
+  Rectangle source = {0.0f, 0.0f, (float) -(current_texture.width), (float) current_texture.height};
+
+  if(player->entity.on_right) {
+    DrawTexture(current_texture, screen_pos.x, screen_pos.y, WHITE);
+  } else {
+    DrawTextureRec(current_texture, source, screen_pos, WHITE);
+  }
+}
+
 void drawEntity(Entity *entity) {
   if(entity == NULL) return;
-
   DrawTexture(entity->animation->resources[(int) entity->animation_index]->texture, entity->position.x, entity->position.y, WHITE);
 }
 

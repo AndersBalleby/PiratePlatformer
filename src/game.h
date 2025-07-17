@@ -36,5 +36,4 @@ void horizontalMovementCollision(Game *game);
 void verticalMovementCollision(Game *game);
 
 /* Entities */
-void drawPlayer(Player *player);
 void drawEntities(Game *game);
