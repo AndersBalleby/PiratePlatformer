@@ -17,7 +17,7 @@ Water initWater(int top, int level_width, int screen_width) {
   for(size_t i = 0; i < tile_x_amount; ++i) {
     int x = i * WATER_TILE_WIDTH + water_start;
     int y = top;
-    water.water_tiles[i] = createTile("water_0", (Vector2) {x, y});
+    water.water_tiles[i] = createTile("water_0", (Vector2) {x, y}, TILETYPE_TERRAIN);
   }
   return water;
 }

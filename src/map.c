@@ -13,30 +13,34 @@ Map createMap(int level_id) {
   TileGroup terrain_group = {};
   snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_TERRAIN, level_id,
            level_id);
-  registerTileGroup("terrain", buffer_path, &terrain_group);
+  registerTileGroup("terrain", buffer_path, &terrain_group, TILETYPE_TERRAIN);
 
   TileGroup grass_group = {};
   snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_GRASS, level_id,
            level_id);
-  registerTileGroup("grass", buffer_path, &grass_group);
+  registerTileGroup("grass", buffer_path, &grass_group, TILETYPE_GRASS);
 
   AnimatedTileGroup coins_group = {};
   snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_COINS, level_id,
            level_id);
-  registerAnimatedTileGroup("coins", buffer_path, &coins_group);
+  registerAnimatedTileGroup("coins", buffer_path, &coins_group, TILETYPE_COIN);
+
+  AnimatedTileGroup bg_palms_group = {};
+  snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_BG_PALMS, level_id, level_id);
+  registerAnimatedTileGroup("palm_bg", buffer_path, &bg_palms_group, TILETYPE_PALMS_BG);
 
   return (Map){
       .level_id = level_id,
       .collision_tiles = terrain_group,
       .decoration_tiles = grass_group,
-      .animated_tiles = coins_group,
+      .animated_tiles = {coins_group, bg_palms_group},
   };
 }
 
 #define ROWS 11 // Antal rows i CSV
 #define COLS 60 // Antal cols i CSV
 void registerTileGroup(const char *group_id, const char *csv_path,
-                       TileGroup *out_group) {
+                       TileGroup *out_group, TileType type) {
   Tile tiles[MAX_TILES];
   int tiles_size = 0;
 
@@ -51,7 +55,7 @@ void registerTileGroup(const char *group_id, const char *csv_path,
           Vector2 pos = {.x = j * TILE_SIZE, .y = i * TILE_SIZE};
           snprintf(buffer, sizeof(buffer), "%s_%d", group_id, value);
 
-          tiles[tiles_size++] = createTile(buffer, pos);
+          tiles[tiles_size++] = createTile(buffer, pos, type);
         }
       }
     }
@@ -63,11 +67,10 @@ void registerTileGroup(const char *group_id, const char *csv_path,
 }
 
 void registerAnimatedTileGroup(const char *group_id, const char *csv_path,
-                               AnimatedTileGroup *out_group) {
+                               AnimatedTileGroup *out_group, TileType type) {
 
   AnimatedTile tiles[MAX_TILES];
   size_t tiles_count = 0;
-
   int map[ROWS][COLS];
   int value = -1;
   if (readCSVToMap(csv_path, ROWS, COLS, map)) {
@@ -80,6 +83,7 @@ void registerAnimatedTileGroup(const char *group_id, const char *csv_path,
           char anim_buffer[128];
           Vector2 pos = {.x = j * TILE_SIZE, .y = i * TILE_SIZE};
 
+          /* COINS GROUP */
           if (strcmp(group_id, "coins") == 0) {
             if (value == 0) {
               snprintf(rs_buffer, sizeof(rs_buffer), "%s_%d", "coins_gold", 0);
@@ -88,9 +92,12 @@ void registerAnimatedTileGroup(const char *group_id, const char *csv_path,
               snprintf(rs_buffer, sizeof(rs_buffer), "%s_%d", "coins_silver", 0);
               strcpy(anim_buffer, "coins_silver");
             }
+          } else if(strcmp(group_id, "palm_bg") == 0) {
+            strcpy(rs_buffer, "palm_bg_0");
+            strcpy(anim_buffer, group_id);
           }
 
-          tiles[tiles_count++] = createAnimatedTile(rs_buffer, anim_buffer, pos, 0.15);
+          tiles[tiles_count++] = createAnimatedTile(rs_buffer, anim_buffer, pos, 0.15, type);
         }
       }
     }

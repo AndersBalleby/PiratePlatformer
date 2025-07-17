@@ -5,6 +5,7 @@
 #define CSV_PATH_GRASS        "../levels/%d/level_%d_grass.csv"
 #define CSV_PATH_PLAYER_SPAWN "../levels/%d/level_%d_player.csv"
 #define CSV_PATH_COINS        "../levels/%d/level_%d_coins.csv"
+#define CSV_PATH_BG_PALMS     "../levels/%d/level_%d_bg_palms.csv"
 
 /* SPRITESHEET FILER */
 #define SPRITESHEET_TERRAIN "../resources/terrain/terrain_tiles.png"
@@ -25,3 +26,6 @@
 #define ANIMATION_WATER "../resources/decoration/water"
 #define ANIMATION_COIN_SILVER "../resources/coins/silver"
 #define ANIMATION_COIN_GOLD "../resources/coins/gold"
+#define ANIMATION_PALM_BG "../resources/terrain/palm_bg"
+#define ANIMATION_PALM_LARGE "../resources/terrain/palm_large"
+#define ANIMATION_PALM_SMALL "../resources/terrain/palm_small"

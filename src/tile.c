@@ -2,7 +2,7 @@
 #include "resources.h"
 #include <raylib.h>
 
-Tile createTile(const char *id, Vector2 pos) {
+Tile createTile(const char *id, Vector2 pos, TileType type) {
   Resource *rs = getResource(id);
   if(rs == NULL) {
     TraceLog(LOG_ERROR, "[TILES] Kunne ikke oprette tile id \"%s\"", id);
@@ -20,12 +20,29 @@ Tile createTile(const char *id, Vector2 pos) {
     .resource = rs,
     .pos = pos,
     .collision_rect = collision_rect,
+    .type = type,
     .active = true,
   };
 }
 
-AnimatedTile createAnimatedTile(const char *rs_id, const char *anim_id, Vector2 pos, float animation_speed) {
-  Tile tile = createTile(rs_id, pos);
+AnimatedTile createAnimatedTile(const char *rs_id, const char *anim_id, Vector2 pos, float animation_speed, TileType type) {
+  int offset_x = 0;
+  int offset_y = 0;
+
+  switch (type) {
+    case TILETYPE_PALMS_BG:
+      offset_y = 64;
+      break;
+    default:
+      break;
+  }
+
+  Vector2 new_pos = {
+    pos.x - offset_x,
+    pos.y - offset_y,
+  };
+  
+  Tile tile = createTile(rs_id, new_pos, type);
   if(tile.resource == NULL) {
     TraceLog(LOG_ERROR, "[TILES] Fejl under oprettelsen af animated tile med id: \"%s\"", anim_id);
     return (AnimatedTile) { .animation = NULL };

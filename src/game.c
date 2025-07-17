@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "level.h"
+#include "map.h"
 #include "paths.h"
 #include "resources.h"
 #include "tile.h"
@@ -16,16 +17,19 @@ bool loadResources() {
 
   /* Load alle spritesheets */
   if (loadSpritesheet("terrain", SPRITESHEET_TERRAIN, 256, 256) == NULL ||
-      loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64)      == NULL ||
-      loadSpritesheet("coins", SPRITESHEET_COINS, 128, 64)      == NULL)
+      loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64) == NULL ||
+      loadSpritesheet("coins", SPRITESHEET_COINS, 128, 64) == NULL)
     return false;
 
-  if (loadAnimation("player_run", ANIMATION_PLAYER_RUN)   == NULL   ||
+  if (loadAnimation("player_run", ANIMATION_PLAYER_RUN) == NULL ||
       loadAnimation("player_idle", ANIMATION_PLAYER_IDLE) == NULL ||
       loadAnimation("player_fall", ANIMATION_PLAYER_FALL) == NULL ||
       loadAnimation("player_jump", ANIMATION_PLAYER_JUMP) == NULL ||
       loadAnimation("coins_silver", ANIMATION_COIN_SILVER) == NULL ||
-      loadAnimation("coins_gold", ANIMATION_COIN_GOLD)     == NULL) {
+      loadAnimation("coins_gold", ANIMATION_COIN_GOLD) == NULL ||
+      loadAnimation("palm_bg", ANIMATION_PALM_BG) == NULL ||
+      loadAnimation("palm_large", ANIMATION_PALM_LARGE) == NULL ||
+      loadAnimation("palm_small", ANIMATION_PALM_SMALL) == NULL) {
     return false;
   }
 
@@ -33,7 +37,7 @@ bool loadResources() {
 }
 
 Game initGame() {
-  const int START_LEVEL = 0;
+  const int START_LEVEL = 1;
 
   TraceLog(LOG_INFO, "[GAME] Indstiller game state og current level");
   TraceLog(LOG_INFO, "[GAME] Nuværende Level: \"%d\"", START_LEVEL);
@@ -52,11 +56,11 @@ Game initGame() {
   }
 
   Player player = initPlayer(current_level.id);
-  if(player.animations[0] == NULL) {
+  if (player.animations[0] == NULL) {
     TraceLog(LOG_ERROR, "[GAME] Fejl under initialisering af player struct");
-    return (Game) {.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
+    return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
-  
+
   return (Game){
       .game_state = GAMESTATE_PLAYING,
       .current_level = current_level,
@@ -91,9 +95,15 @@ bool runGame(Game *game) { // Main game loop
 }
 
 void updateTiles(Game *game) {
-  for(size_t i = 0; i < game->current_level.map.animated_tiles.tiles_count; ++i) {
-    if(game->current_level.map.animated_tiles.anim_tiles[i].tile.resource->is_loaded)
-      updateAnimatedTile(&game->current_level.map.animated_tiles.anim_tiles[i]);
+  for (size_t i = 0; i < ANIMATED_TILES_SIZE; ++i) {
+    for (size_t j = 0;
+         j < game->current_level.map.animated_tiles[i].tiles_count; ++j) {
+      if (game->current_level.map.animated_tiles[i]
+              .anim_tiles[j]
+              .tile.resource->is_loaded)
+        updateAnimatedTile(
+            &game->current_level.map.animated_tiles[i].anim_tiles[j]);
+    }
   }
 }
 
@@ -129,11 +139,21 @@ void horizontalMovementCollision(Game *game) {
       }
     }
   }
-  
-  /* Coin collision */ 
-  for(size_t j = 0; j < game->current_level.map.animated_tiles.tiles_count; ++j) {
-    if(CheckCollisionRecs(player->entity.collision_rect, game->current_level.map.animated_tiles.anim_tiles[j].tile.collision_rect)) {
-      handleCoin(&game->player, &game->current_level.map.animated_tiles.anim_tiles[j]);
+
+  /* Coin collision */
+  for (size_t i = 0; i < ANIMATED_TILES_SIZE; ++i) {
+    for (size_t j = 0;
+         j < game->current_level.map.animated_tiles[i].tiles_count; ++j) {
+      if (game->current_level.map.animated_tiles[i].anim_tiles[j].tile.type ==
+          TILETYPE_COIN) {
+        if (CheckCollisionRecs(player->entity.collision_rect,
+                               game->current_level.map.animated_tiles[i]
+                                   .anim_tiles[j]
+                                   .tile.collision_rect)) {
+          handleCoin(&game->player,
+                     &game->current_level.map.animated_tiles[i].anim_tiles[j]);
+        }
+      }
     }
   }
 }
@@ -196,7 +216,7 @@ Player initPlayer(int level_id) {
 
   if (player.entity.animation == NULL) {
     TraceLog(LOG_ERROR, "[GAME] Kunne ikke oprette en player entity");
-    return (Player) {};
+    return (Player){};
   }
 
   return player;
