@@ -245,7 +245,8 @@ void unloadResource(Resource *resource) {
 
 void unloadAllResources() {
   for (int i = 0; i < rs_collection.size; ++i) {
-    unloadResource(&rs_collection.resources[i]);
+    if(rs_collection.resources[i].is_loaded)
+      unloadResource(&rs_collection.resources[i]);
   }
 
   rs_collection.size = 0;

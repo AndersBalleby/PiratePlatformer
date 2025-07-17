@@ -22,3 +22,4 @@
 #define ANIMATION_PLAYER_IDLE "../resources/character/idle"
 #define ANIMATION_PLAYER_FALL "../resources/character/fall"
 #define ANIMATION_PLAYER_JUMP "../resources/character/jump"
+#define ANIMATION_WATER "../resources/decoration/water"

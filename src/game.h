@@ -19,6 +19,7 @@ typedef struct Game {
   Level current_level;
   CustomCamera camera;
   Sky sky;
+  Water water;
   Player player;
   Entity entities[15];
   int entity_count;
@@ -29,6 +30,7 @@ bool loadResources();
 
 /* Game Logik */
 Game initGame(void);
+Player initPlayer(int level_id);
 
 bool runGame(Game *game);
 void drawGame(Game *game);
