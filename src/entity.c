@@ -135,13 +135,13 @@ Vector2 getPlayerSpawnPos(int level_id) {
   return (Vector2) { .x = 0, .y = 0 };
 }
 
-void drawPlayer(Player *player) {
+void drawPlayer(Player *player, Vector2 offset) {
   int tallest_frame_height = 56;
   Texture2D current_texture = player->entity.animation->resources[(int) player->entity.animation_index]->texture;
   int y_offset = tallest_frame_height - current_texture.height;
 
-  Vector2 screen_pos = {player->entity.position.x,
-                        player->entity.position.y + y_offset};
+  Vector2 screen_pos = {player->entity.position.x - offset.x,
+                        player->entity.position.y - offset.y + y_offset};
 
   Rectangle source = {0.0f, 0.0f, (float) -(current_texture.width), (float) current_texture.height};
 

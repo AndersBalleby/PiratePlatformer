@@ -52,17 +52,3 @@ void registerTileGroup(const char *group_id, const char *csv_path,
   out_group->tiles_size = tiles_size;
   memcpy(out_group->tiles, tiles, sizeof(Tile) * tiles_size);
 }
-
-void drawMap(Map *map) {
-  /* Draw Decoration tiles */
-  for (int i = 0; i < map->decoration_tiles.tiles_size; ++i) {
-    Tile tile = map->decoration_tiles.tiles[i];
-    DrawTexture(tile.resource->texture, tile.pos.x, tile.pos.y, WHITE);
-  }
-
-  /* Draw Collision tiles */
-  for (int i = 0; i < map->collision_tiles.tiles_size; ++i) {
-    Tile tile = map->collision_tiles.tiles[i];
-    DrawTexture(tile.resource->texture, tile.pos.x, tile.pos.y, WHITE);
-  }
-}

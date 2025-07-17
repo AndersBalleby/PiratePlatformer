@@ -1,5 +1,6 @@
 #pragma once
 
+#include "camera.h"
 #include "level.h"
 #include "entity.h"
 #include <stdlib.h>
@@ -15,6 +16,7 @@ typedef enum GameState {
 typedef struct Game {
   GameState game_state;
   Level current_level;
+  CustomCamera camera;
   Player player;
   Entity entities[15];
   int entity_count;

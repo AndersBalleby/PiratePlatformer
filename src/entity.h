@@ -60,7 +60,7 @@ void animateEntity(Entity *entity);
 /* PLAYER */
 void updatePlayer(Player *player);
 Vector2 getPlayerSpawnPos(int level_id);
-void drawPlayer(Player *player);
+void drawPlayer(Player *player, Vector2 offset);
 
 /* Input & Physics */
 void getPlayerInput(Player *player);

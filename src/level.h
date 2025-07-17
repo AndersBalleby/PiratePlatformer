@@ -18,9 +18,6 @@ typedef struct Level {
 /* Init */
 Level initLevel(int id);
 
-/* Drawing */
-void drawLevel(Level *lvl);
-
 /* Cleanup */
 void destroyLevel(Level *lvl);
 

@@ -13,3 +13,10 @@
 
 /* SPRITES */
 #define SPRITE_PLAYER "../resources/character/idle/1.png"
+
+
+/* ANIMATION PATHS */
+#define ANIMATION_PLAYER_RUN "../resources/character/run"
+#define ANIMATION_PLAYER_IDLE "../resources/character/idle"
+#define ANIMATION_PLAYER_FALL "../resources/character/fall"
+#define ANIMATION_PLAYER_JUMP "../resources/character/jump"

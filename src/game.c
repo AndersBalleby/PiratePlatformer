@@ -1,4 +1,5 @@
 #include "game.h"
+#include "camera.h"
 #include "entity.h"
 #include "level.h"
 #include "paths.h"
@@ -17,10 +18,10 @@ bool loadResources() {
       loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64) == NULL)
     return false;
 
-  if(loadAnimation("player_run", "../resources/character/run") == NULL ||
-     loadAnimation("player_idle", "../resources/character/idle") == NULL ||
-     loadAnimation("player_fall", "../resources/character/fall") == NULL ||
-     loadAnimation("player_jump", "../resources/character/jump") == NULL) {
+  if(loadAnimation("player_run", ANIMATION_PLAYER_RUN) == NULL ||
+     loadAnimation("player_idle", ANIMATION_PLAYER_IDLE) == NULL ||
+     loadAnimation("player_fall", ANIMATION_PLAYER_FALL) == NULL ||
+     loadAnimation("player_jump", ANIMATION_PLAYER_JUMP) == NULL) {
     return false;
   }
 
@@ -73,6 +74,7 @@ Game initGame() {
   return (Game){
       .game_state = GAMESTATE_PLAYING,
       .current_level = current_level,
+      .camera = initCamera(),
       .player = player,
       .entity_count = 0,
   };
@@ -90,14 +92,14 @@ bool runGame(Game *game) { // Main game loop
   verticalMovementCollision(game);
 
   drawGame(game);
-  drawPlayer(&game->player);
+  drawPlayer(&game->player, game->camera.offset);
   drawEntities(game);
 
   return true;
 }
 
 void drawGame(Game *game) {
- drawLevel(&game->current_level); 
+  customDraw(&game->camera, &game->current_level.map, &game->player);
 }
 
 void drawEntities(Game *game) {

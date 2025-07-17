@@ -1,8 +1,4 @@
 #include "files.h"
-#include <ctype.h>
-#include <raylib.h>
-#include <stdlib.h>
-#include <string.h>
 
 /* Funktioner til qsort */
 int extractNumber(const char *filename) {
