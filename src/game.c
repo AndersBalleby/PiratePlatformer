@@ -29,7 +29,7 @@ bool loadResources() {
 }
 
 Game initGame() {
-  const int START_LEVEL = 1; 
+  const int START_LEVEL = 0; 
 
   TraceLog(LOG_INFO, "[GAME] Indstiller game state og current level");
   TraceLog(LOG_INFO, "[GAME] Nuværende Level: \"%d\"", START_LEVEL); 
@@ -75,6 +75,7 @@ Game initGame() {
       .game_state = GAMESTATE_PLAYING,
       .current_level = current_level,
       .camera = initCamera(),
+      .sky = initSky(),
       .player = player,
       .entity_count = 0,
   };
@@ -91,6 +92,7 @@ bool runGame(Game *game) { // Main game loop
   horizontalMovementCollision(game);
   verticalMovementCollision(game);
 
+  drawSky(&game->sky);
   drawGame(game);
   drawPlayer(&game->player, game->camera.offset);
   drawEntities(game);

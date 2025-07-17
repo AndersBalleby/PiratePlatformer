@@ -1,5 +1,6 @@
 #pragma once
 
+#include "background.h"
 #include "camera.h"
 #include "level.h"
 #include "entity.h"
@@ -17,6 +18,7 @@ typedef struct Game {
   GameState game_state;
   Level current_level;
   CustomCamera camera;
+  Sky sky;
   Player player;
   Entity entities[15];
   int entity_count;

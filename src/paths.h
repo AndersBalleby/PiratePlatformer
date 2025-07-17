@@ -13,7 +13,9 @@
 
 /* SPRITES */
 #define SPRITE_PLAYER "../resources/character/idle/1.png"
-
+#define SPRITE_SKY_TOP "../resources/decoration/sky/sky_top.png"
+#define SPRITE_SKY_MIDDLE "../resources/decoration/sky/sky_middle.png"
+#define SPRITE_SKY_BOTTOM "../resources/decoration/sky/sky_bottom.png"
 
 /* ANIMATION PATHS */
 #define ANIMATION_PLAYER_RUN "../resources/character/run"

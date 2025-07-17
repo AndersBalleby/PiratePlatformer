@@ -24,6 +24,8 @@ add_executable(${PROJECT_NAME}
   src/paths.h
   src/camera.c 
   src/camera.h
+  src/background.c 
+  src/background.h
 )
 
 target_link_libraries(${PROJECT_NAME}
