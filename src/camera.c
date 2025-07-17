@@ -34,10 +34,17 @@ void customDraw(CustomCamera *camera, Map *map, Player *player) {
   
   size_t i;
   for(i = 0; i < map->collision_tiles.tiles_size; ++i) {
-    drawTileWithOffset(&map->collision_tiles.tiles[i], camera->offset);
+    if(map->collision_tiles.tiles[i].active && map->collision_tiles.tiles[i].resource->is_loaded)
+      drawTileWithOffset(&map->collision_tiles.tiles[i], camera->offset);
   }
 
   for(i = 0; i < map->decoration_tiles.tiles_size; ++i) {
-    drawTileWithOffset(&map->decoration_tiles.tiles[i], camera->offset);
+    if(map->decoration_tiles.tiles[i].active && map->decoration_tiles.tiles[i].resource->is_loaded)
+      drawTileWithOffset(&map->decoration_tiles.tiles[i], camera->offset);
+  }
+
+  for(i = 0; i < map->animated_tiles.tiles_count; ++i) {
+    if(map->animated_tiles.anim_tiles[i].tile.active && map->animated_tiles.anim_tiles[i].tile.resource->is_loaded)
+      drawTileWithOffset(&map->animated_tiles.anim_tiles[i].tile, camera->offset);
   }
 }

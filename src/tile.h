@@ -9,7 +9,15 @@ typedef struct Tile {
   Resource *resource;
   Vector2 pos;
   Rectangle collision_rect;
+  bool active;
 } Tile;
+
+typedef struct AnimatedTile {
+  Tile tile;
+  Animation *animation;
+  float animation_index;
+  float animation_speed;
+} AnimatedTile;
 
 typedef struct TileGroup {
   const char *id;
@@ -17,7 +25,15 @@ typedef struct TileGroup {
   int tiles_size;
 } TileGroup;
 
+typedef struct AnimatedTileGroup {
+  const char *id;
+  AnimatedTile anim_tiles[MAX_TILES];
+  size_t tiles_count;
+} AnimatedTileGroup;
 
 Tile createTile(const char *id, Vector2 pos);
+AnimatedTile createAnimatedTile(const char *rs_id, const char *anim_id, Vector2 pos, float animation_speed);
+
+void updateAnimatedTile(AnimatedTile *anim_tile);
 
 void drawTile(Tile *tile);

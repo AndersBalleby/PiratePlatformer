@@ -37,9 +37,13 @@ void drawGame(Game *game);
 
 void destroyGame(Game *game);
 
+/* Tiles */
+void updateTiles(Game *game);
+
 /* Collision */
 void horizontalMovementCollision(Game *game);
 void verticalMovementCollision(Game *game);
+bool checkCoinCollision(Game *game);
 
 /* Entities */
 void drawEntities(Game *game);

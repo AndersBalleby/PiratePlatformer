@@ -16,13 +16,16 @@ bool loadResources() {
 
   /* Load alle spritesheets */
   if (loadSpritesheet("terrain", SPRITESHEET_TERRAIN, 256, 256) == NULL ||
-      loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64) == NULL)
+      loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64)      == NULL ||
+      loadSpritesheet("coins", SPRITESHEET_COINS, 128, 64)      == NULL)
     return false;
 
-  if (loadAnimation("player_run", ANIMATION_PLAYER_RUN) == NULL ||
+  if (loadAnimation("player_run", ANIMATION_PLAYER_RUN)   == NULL   ||
       loadAnimation("player_idle", ANIMATION_PLAYER_IDLE) == NULL ||
       loadAnimation("player_fall", ANIMATION_PLAYER_FALL) == NULL ||
-      loadAnimation("player_jump", ANIMATION_PLAYER_JUMP) == NULL) {
+      loadAnimation("player_jump", ANIMATION_PLAYER_JUMP) == NULL ||
+      loadAnimation("coins_silver", ANIMATION_COIN_SILVER) == NULL ||
+      loadAnimation("coins_gold", ANIMATION_COIN_GOLD)     == NULL) {
     return false;
   }
 
@@ -53,7 +56,7 @@ Game initGame() {
     TraceLog(LOG_ERROR, "[GAME] Fejl under initialisering af player struct");
     return (Game) {.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
-
+  
   return (Game){
       .game_state = GAMESTATE_PLAYING,
       .current_level = current_level,
@@ -71,6 +74,7 @@ bool runGame(Game *game) { // Main game loop
     return false; // exit game fra main loop
   }
 
+  updateTiles(game);
   updatePlayer(&game->player);
   updateWater(&game->water);
 
@@ -84,6 +88,13 @@ bool runGame(Game *game) { // Main game loop
   drawWater(&game->water);
 
   return true;
+}
+
+void updateTiles(Game *game) {
+  for(size_t i = 0; i < game->current_level.map.animated_tiles.tiles_count; ++i) {
+    if(game->current_level.map.animated_tiles.anim_tiles[i].tile.resource->is_loaded)
+      updateAnimatedTile(&game->current_level.map.animated_tiles.anim_tiles[i]);
+  }
 }
 
 void drawGame(Game *game) {
@@ -116,6 +127,13 @@ void horizontalMovementCollision(Game *game) {
         player->entity.collision_rect.x = coll_tiles.tiles[i].collision_rect.x -
                                           player->entity.collision_rect.width;
       }
+    }
+  }
+  
+  /* Coin collision */ 
+  for(size_t j = 0; j < game->current_level.map.animated_tiles.tiles_count; ++j) {
+    if(CheckCollisionRecs(player->entity.collision_rect, game->current_level.map.animated_tiles.anim_tiles[j].tile.collision_rect)) {
+      handleCoin(&game->player, &game->current_level.map.animated_tiles.anim_tiles[j]);
     }
   }
 }

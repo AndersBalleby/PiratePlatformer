@@ -152,6 +152,10 @@ void drawPlayer(Player *player, Vector2 offset) {
   }
 }
 
+void handleCoin(Player *player, AnimatedTile *coin) {
+  coin->tile.active = false;
+}
+
 void drawEntity(Entity *entity) {
   if(entity == NULL) return;
   DrawTexture(entity->animation->resources[(int) entity->animation_index]->texture, entity->position.x, entity->position.y, WHITE);

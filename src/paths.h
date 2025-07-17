@@ -4,12 +4,12 @@
 #define CSV_PATH_TERRAIN      "../levels/%d/level_%d_terrain.csv"
 #define CSV_PATH_GRASS        "../levels/%d/level_%d_grass.csv"
 #define CSV_PATH_PLAYER_SPAWN "../levels/%d/level_%d_player.csv"
-
+#define CSV_PATH_COINS        "../levels/%d/level_%d_coins.csv"
 
 /* SPRITESHEET FILER */
 #define SPRITESHEET_TERRAIN "../resources/terrain/terrain_tiles.png"
 #define SPRITESHEET_GRASS "../resources/decoration/grass/grass.png"
-
+#define SPRITESHEET_COINS "../resources/coins/coin_tiles.png"
 
 /* SPRITES */
 #define SPRITE_PLAYER "../resources/character/idle/1.png"
@@ -23,3 +23,5 @@
 #define ANIMATION_PLAYER_FALL "../resources/character/fall"
 #define ANIMATION_PLAYER_JUMP "../resources/character/jump"
 #define ANIMATION_WATER "../resources/decoration/water"
+#define ANIMATION_COIN_SILVER "../resources/coins/silver"
+#define ANIMATION_COIN_GOLD "../resources/coins/gold"

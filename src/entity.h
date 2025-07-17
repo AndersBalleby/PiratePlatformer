@@ -1,6 +1,7 @@
 #pragma once
 
 #include "resources.h"
+#include "tile.h"
 #include <raylib.h>
 
 /* PLAYER STATS */
@@ -63,6 +64,7 @@ Vector2 getPlayerSpawnPos(int level_id);
 void drawPlayer(Player *player, Vector2 offset);
 
 /* Input & Physics */
+void handleCoin(Player *player, AnimatedTile *coin);
 void getPlayerInput(Player *player);
 void jump(Player *player);
 void applyGravity(Player *player);
