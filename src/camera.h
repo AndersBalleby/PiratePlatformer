@@ -3,10 +3,6 @@
 #include "entity.h"
 #include "map.h"
 
-#define CAMERA_X 300
-#define CAMERA_Y 350
-#define CAMERA_WIDTH 350
-#define CAMERA_HEIGHT 350
 typedef struct CustomCamera {
   Rectangle rect;
   Vector2 offset;

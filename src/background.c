@@ -1,8 +1,4 @@
 #include "background.h"
-#include "paths.h"
-#include "resources.h"
-#include "tile.h"
-#include <raylib.h>
 
 #define WATER_TILE_WIDTH 192
 Water initWater(int top, int level_width, int screen_width) {
@@ -19,6 +15,7 @@ Water initWater(int top, int level_width, int screen_width) {
     int y = top;
     water.water_tiles[i] = createTile("water_0", (Vector2) {x, y}, TILETYPE_TERRAIN);
   }
+
   return water;
 }
 
@@ -31,7 +28,7 @@ void drawWater(Water *water) {
 }
 
 void updateWater(Water *water) {
-  if((int) water_frame_index >= 4) {
+  if((int) water_frame_index >= water->animation->count) {
     water_frame_index = 0;
   }
 

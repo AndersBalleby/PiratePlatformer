@@ -3,12 +3,14 @@
 #include "tile.h"
 #include "files.h"
 
-#define ANIMATED_TILES_SIZE 2
+#define ANIMATED_TILES_SIZE 3
 typedef struct Map {
   int level_id;
   TileGroup collision_tiles;
   TileGroup decoration_tiles;
-  AnimatedTileGroup animated_tiles[ANIMATED_TILES_SIZE];
+  AnimatedTileGroup bg_palm_group;
+  AnimatedTileGroup fg_palm_group;
+  AnimatedTileGroup coin_group;
 } Map;
 
 /* Create & load resources*/

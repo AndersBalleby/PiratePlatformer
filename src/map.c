@@ -29,11 +29,18 @@ Map createMap(int level_id) {
   snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_BG_PALMS, level_id, level_id);
   registerAnimatedTileGroup("palm_bg", buffer_path, &bg_palms_group, TILETYPE_PALMS_BG);
 
+  
+  AnimatedTileGroup fg_palms_group = {};
+  snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_FG_PALMS, level_id, level_id);
+  registerAnimatedTileGroup("palm_fg", buffer_path, &fg_palms_group, TILETYPE_PALMS_FG);
+
   return (Map){
       .level_id = level_id,
       .collision_tiles = terrain_group,
       .decoration_tiles = grass_group,
-      .animated_tiles = {coins_group, bg_palms_group},
+      .coin_group = coins_group,
+      .bg_palm_group = bg_palms_group,
+      .fg_palm_group = fg_palms_group,
   };
 }
 
@@ -83,18 +90,25 @@ void registerAnimatedTileGroup(const char *group_id, const char *csv_path,
           char anim_buffer[128];
           Vector2 pos = {.x = j * TILE_SIZE, .y = i * TILE_SIZE};
 
-          /* COINS GROUP */
-          if (strcmp(group_id, "coins") == 0) {
+          if (strcmp(group_id, "coins") == 0) { /* COINS GROUP */
             if (value == 0) {
-              snprintf(rs_buffer, sizeof(rs_buffer), "%s_%d", "coins_gold", 0);
+              strcpy(rs_buffer, "coins_gold_0");
               strcpy(anim_buffer, "coins_gold");
             } else if (value == 1) {
-              snprintf(rs_buffer, sizeof(rs_buffer), "%s_%d", "coins_silver", 0);
-              strcpy(anim_buffer, "coins_silver");
+              strcpy(rs_buffer, "coins_silver_0");
+              strcpy(anim_buffer, "coins_silver_0");
             }
-          } else if(strcmp(group_id, "palm_bg") == 0) {
+          } else if(strcmp(group_id, "palm_bg") == 0) { /* BG PALMS GROUP */
             strcpy(rs_buffer, "palm_bg_0");
             strcpy(anim_buffer, group_id);
+          } else if(strcmp(group_id, "palm_fg") == 0) {
+            if(value == 0) {
+              strcpy(rs_buffer, "palm_small_0");
+              strcpy(anim_buffer, "palm_small");
+            } else if(value == 1) {
+              strcpy(rs_buffer, "palm_large_0");
+              strcpy(anim_buffer, "palm_large");
+            }
           }
 
           tiles[tiles_count++] = createAnimatedTile(rs_buffer, anim_buffer, pos, 0.15, type);

@@ -3,6 +3,7 @@
 #include "resources.h"
 #include "paths.h"
 #include "tile.h"
+#include <raylib.h>
 
 typedef struct Water {
   Animation *animation;

@@ -1,6 +1,7 @@
 #include "tile.h"
 #include "resources.h"
 #include <raylib.h>
+#include <string.h>
 
 Tile createTile(const char *id, Vector2 pos, TileType type) {
   Resource *rs = getResource(id);
@@ -33,6 +34,12 @@ AnimatedTile createAnimatedTile(const char *rs_id, const char *anim_id, Vector2 
     case TILETYPE_PALMS_BG:
       offset_y = 64;
       break;
+    case TILETYPE_PALMS_FG:
+      if(strcmp(rs_id, "palm_small_0") == 0) {
+        offset_y = 38;
+      } else {
+        offset_y = 64;
+      }
     default:
       break;
   }

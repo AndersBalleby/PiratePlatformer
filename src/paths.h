@@ -6,6 +6,7 @@
 #define CSV_PATH_PLAYER_SPAWN "../levels/%d/level_%d_player.csv"
 #define CSV_PATH_COINS        "../levels/%d/level_%d_coins.csv"
 #define CSV_PATH_BG_PALMS     "../levels/%d/level_%d_bg_palms.csv"
+#define CSV_PATH_FG_PALMS     "../levels/%d/level_%d_fg_palms.csv"
 
 /* SPRITESHEET FILER */
 #define SPRITESHEET_TERRAIN "../resources/terrain/terrain_tiles.png"

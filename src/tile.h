@@ -10,6 +10,7 @@ typedef enum TileType {
   TILETYPE_COIN,
   TILETYPE_GRASS,
   TILETYPE_PALMS_BG,
+  TILETYPE_PALMS_FG,
 } TileType;
 
 typedef struct Tile {

@@ -48,25 +48,38 @@ Game initGame() {
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
 
+  /* Level */
   Level current_level = initLevel(START_LEVEL);
   if (current_level.id == -1) { // Tjek for fejl under level initialisering
     TraceLog(LOG_ERROR, "[GAME] Fejl under initialisering af level 0");
 
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
-
+  
+  /* Player */
   Player player = initPlayer(current_level.id);
   if (player.animations[0] == NULL) {
     TraceLog(LOG_ERROR, "[GAME] Fejl under initialisering af player struct");
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
+  
+  /* Custom Camera */ 
+  CustomCamera camera = initCamera();
+
+  /* Sky & Water */
+  Sky sky = initSky();
+  
+  const int water_top = 780;
+  const int level_width = 11 * TILE_SIZE;
+  const int screen_width = GetScreenWidth();
+  Water water = initWater(water_top, level_width, screen_width); 
 
   return (Game){
       .game_state = GAMESTATE_PLAYING,
       .current_level = current_level,
-      .camera = initCamera(),
-      .sky = initSky(),
-      .water = initWater(780, (11 * TILE_SIZE), GetScreenWidth()),
+      .camera = camera,
+      .sky = sky,
+      .water = water,
       .player = player,
       .entity_count = 0,
   };
@@ -78,13 +91,16 @@ bool runGame(Game *game) { // Main game loop
     return false; // exit game fra main loop
   }
 
+  /* Updates */
   updateTiles(game);
   updatePlayer(&game->player);
   updateWater(&game->water);
 
+  /* Collision */
   horizontalMovementCollision(game);
   verticalMovementCollision(game);
 
+  /* Drawing */
   drawSky(&game->sky);
   drawGame(game);
   drawPlayer(&game->player, game->camera.offset);
@@ -95,14 +111,20 @@ bool runGame(Game *game) { // Main game loop
 }
 
 void updateTiles(Game *game) {
+  AnimatedTileGroup *animated_tiles[ANIMATED_TILES_SIZE] = {
+    &game->current_level.map.bg_palm_group,
+    &game->current_level.map.fg_palm_group,
+    &game->current_level.map.coin_group
+  };
+
+  size_t total_tile_count = 0;
   for (size_t i = 0; i < ANIMATED_TILES_SIZE; ++i) {
-    for (size_t j = 0;
-         j < game->current_level.map.animated_tiles[i].tiles_count; ++j) {
-      if (game->current_level.map.animated_tiles[i]
-              .anim_tiles[j]
-              .tile.resource->is_loaded)
-        updateAnimatedTile(
-            &game->current_level.map.animated_tiles[i].anim_tiles[j]);
+    total_tile_count += animated_tiles[i]->tiles_count;
+
+    for (size_t j = 0; j < animated_tiles[i]->tiles_count; ++j) {
+      AnimatedTile *anim_tile = &animated_tiles[i]->anim_tiles[j];
+      if (anim_tile->tile.resource->is_loaded)
+        updateAnimatedTile(anim_tile);
     }
   }
 }
@@ -121,74 +143,70 @@ void drawEntities(Game *game) {
 
 void horizontalMovementCollision(Game *game) {
   Player *player = &game->player;
+  Rectangle *player_rect = &player->entity.collision_rect;
+  Vector2 *player_direction = &player->entity.direction;
+
   TileGroup coll_tiles = game->current_level.map.collision_tiles;
-
-  player->entity.collision_rect.x +=
-      player->entity.direction.x * game->player.entity.speed;
-
+  
+  player_rect->x += player_direction->x * player->entity.speed;
+  
+  Tile *coll_tile = NULL;
   for (size_t i = 0; i < coll_tiles.tiles_size; ++i) {
-    if (CheckCollisionRecs(coll_tiles.tiles[i].collision_rect,
-                           player->entity.collision_rect)) {
-      if (player->entity.direction.x < 0) {
-        player->entity.collision_rect.x =
-            coll_tiles.tiles[i].collision_rect.x +
-            coll_tiles.tiles[i].collision_rect.width;
-      } else if (player->entity.direction.x > 0) {
-        player->entity.collision_rect.x = coll_tiles.tiles[i].collision_rect.x -
-                                          player->entity.collision_rect.width;
+    coll_tile = &coll_tiles.tiles[i];
+    if (CheckCollisionRecs(coll_tile->collision_rect, *player_rect)) {
+      if (player_direction->x < 0) {
+        player_rect->x = coll_tile->collision_rect.x + coll_tile->collision_rect.width;
+      } else if (player_direction->x > 0) {
+        player_rect->x = coll_tile->collision_rect.x - player_rect->width;
       }
     }
   }
 
-  /* Coin collision */
-  for (size_t i = 0; i < ANIMATED_TILES_SIZE; ++i) {
-    for (size_t j = 0;
-         j < game->current_level.map.animated_tiles[i].tiles_count; ++j) {
-      if (game->current_level.map.animated_tiles[i].anim_tiles[j].tile.type ==
-          TILETYPE_COIN) {
-        if (CheckCollisionRecs(player->entity.collision_rect,
-                               game->current_level.map.animated_tiles[i]
-                                   .anim_tiles[j]
-                                   .tile.collision_rect)) {
-          handleCoin(&game->player,
-                     &game->current_level.map.animated_tiles[i].anim_tiles[j]);
-        }
-      }
+  AnimatedTileGroup *coin_group = &game->current_level.map.coin_group;
+  for(size_t i = 0; i < coin_group->tiles_count; ++i) {
+
+    AnimatedTile *anim_tile = &coin_group->anim_tiles[i];
+    if(CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
+      handleCoin(player, anim_tile);
     }
   }
 }
 
 void verticalMovementCollision(Game *game) {
   Player *player = &game->player;
+  Rectangle *player_rect = &player->entity.collision_rect;
+  Vector2 *player_direction = &player->entity.direction;
+
   TileGroup coll_tiles = game->current_level.map.collision_tiles;
 
   applyGravity(player);
   player->on_ground = false;
 
   for (size_t i = 0; i < coll_tiles.tiles_size; ++i) {
-    if (CheckCollisionRecs(coll_tiles.tiles[i].collision_rect,
-                           player->entity.collision_rect)) {
-      if (player->entity.direction.y > 0) {
-        player->entity.collision_rect.y = coll_tiles.tiles[i].collision_rect.y -
-                                          player->entity.collision_rect.height;
+    
+    Tile *coll_tile = &coll_tiles.tiles[i];
+    if (CheckCollisionRecs(coll_tile->collision_rect, *player_rect)) { 
+      if (player_direction->y > 0) {
+        player_rect->y = coll_tile->collision_rect.y - player_rect->height;
+        
         player->on_ground = true;
-        player->entity.direction.y = 0;
-      } else if (player->entity.direction.y < 0) {
-        player->entity.collision_rect.y =
-            coll_tiles.tiles[i].collision_rect.y +
-            coll_tiles.tiles[i].collision_rect.height;
-        player->entity.direction.y = 0;
+        player_direction->y = 0;
+
+      } else if (player_direction->y < 0) {
+        player_rect->y = coll_tile->collision_rect.y + coll_tile->collision_rect.height;
+
+        player_direction->y = 0;
         player->on_ceiling = true;
       }
     }
   }
 
-  if (player->on_ground && player->entity.direction.y < 0 ||
-      player->entity.direction.y > 1) {
+  if (player->on_ground && player_direction->y < 0 ||
+      player_direction->y > 1) {
     player->on_ground = false;
   }
 
-  if (player->on_ceiling && player->entity.direction.y > 0) {
+  if (player->on_ceiling && player_direction->y > 0) {
     player->on_ceiling = false;
   }
 }
