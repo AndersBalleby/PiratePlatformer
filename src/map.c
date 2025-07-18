@@ -20,6 +20,10 @@ Map createMap(int level_id) {
            level_id);
   registerTileGroup("grass", buffer_path, &grass_group, TILETYPE_GRASS);
 
+  TileGroup crate_group = {};
+  snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_CRATE, level_id, level_id);
+  registerTileGroup("crate", buffer_path, &crate_group, TILETYPE_CRATE);
+
   AnimatedTileGroup coins_group = {};
   snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_COINS, level_id,
            level_id);
@@ -38,6 +42,7 @@ Map createMap(int level_id) {
       .level_id = level_id,
       .collision_tiles = terrain_group,
       .decoration_tiles = grass_group,
+      .crates_group = crate_group,
       .coin_group = coins_group,
       .bg_palm_group = bg_palms_group,
       .fg_palm_group = fg_palms_group,
@@ -60,7 +65,11 @@ void registerTileGroup(const char *group_id, const char *csv_path,
 
           char buffer[128];
           Vector2 pos = {.x = j * TILE_SIZE, .y = i * TILE_SIZE};
-          snprintf(buffer, sizeof(buffer), "%s_%d", group_id, value);
+          if(type == TILETYPE_CRATE) {
+            snprintf(buffer, sizeof(buffer), "%s", group_id);
+          } else {
+            snprintf(buffer, sizeof(buffer), "%s_%d", group_id, value);
+          }
 
           tiles[tiles_size++] = createTile(buffer, pos, type);
         }

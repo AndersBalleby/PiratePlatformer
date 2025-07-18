@@ -7,6 +7,7 @@
 #define CSV_PATH_COINS        "../levels/%d/level_%d_coins.csv"
 #define CSV_PATH_BG_PALMS     "../levels/%d/level_%d_bg_palms.csv"
 #define CSV_PATH_FG_PALMS     "../levels/%d/level_%d_fg_palms.csv"
+#define CSV_PATH_CRATE        "../levels/%d/level_%d_crates.csv"
 
 /* SPRITESHEET FILER */
 #define SPRITESHEET_TERRAIN "../resources/terrain/terrain_tiles.png"
@@ -15,6 +16,7 @@
 
 /* SPRITES */
 #define SPRITE_PLAYER "../resources/character/idle/1.png"
+#define SPRITE_CRATE "../resources/terrain/crate.png"
 #define SPRITE_SKY_TOP "../resources/decoration/sky/sky_top.png"
 #define SPRITE_SKY_MIDDLE "../resources/decoration/sky/sky_middle.png"
 #define SPRITE_SKY_BOTTOM "../resources/decoration/sky/sky_bottom.png"

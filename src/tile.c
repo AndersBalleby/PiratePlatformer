@@ -10,16 +10,32 @@ Tile createTile(const char *id, Vector2 pos, TileType type) {
     return (Tile) { .resource = NULL, .pos = {}};
   }
 
+  int offset_x = 0;
+  int offset_y = 0;
+
+  switch (type) {
+    case TILETYPE_CRATE:
+      offset_y = -23;
+      break;
+    default:
+      break;
+  }
+
+  Vector2 new_pos = {
+    pos.x - offset_x,
+    pos.y - offset_y,
+  };
+
   Rectangle collision_rect = {
-    .x = pos.x,
-    .y = pos.y,
+    .x = new_pos.x,
+    .y = new_pos.y,
     .width = rs->texture.width,
     .height = rs->texture.height,
   };
 
   return (Tile) {
     .resource = rs,
-    .pos = pos,
+    .pos = new_pos,
     .collision_rect = collision_rect,
     .type = type,
     .active = true,

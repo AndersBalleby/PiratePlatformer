@@ -8,6 +8,7 @@ typedef struct Map {
   int level_id;
   TileGroup collision_tiles;
   TileGroup decoration_tiles;
+  TileGroup crates_group;
   AnimatedTileGroup bg_palm_group;
   AnimatedTileGroup fg_palm_group;
   AnimatedTileGroup coin_group;

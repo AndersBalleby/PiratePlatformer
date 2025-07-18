@@ -11,7 +11,8 @@
 
 bool loadResources() {
   /* Load alle single resources */
-  if (loadResource("player", LoadTexture(SPRITE_PLAYER)) == NULL) {
+  if (loadResource("player", LoadTexture(SPRITE_PLAYER)) == NULL ||
+      loadResource("crate", LoadTexture(SPRITE_CRATE)) == NULL) {
     return false;
   }
 

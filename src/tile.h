@@ -11,6 +11,7 @@ typedef enum TileType {
   TILETYPE_GRASS,
   TILETYPE_PALMS_BG,
   TILETYPE_PALMS_FG,
+  TILETYPE_CRATE,
 } TileType;
 
 typedef struct Tile {

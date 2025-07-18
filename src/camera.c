@@ -40,38 +40,32 @@ void drawTileWithOffset(Tile *tile, Vector2 offset) {
 
 void customDraw(CustomCamera *camera, Map *map, Player *player) {
   boxTargetCamera(camera, player);
+  
+  drawAnimatedGroup(camera, &map->bg_palm_group);
+  drawAnimatedGroup(camera, &map->coin_group);
+  drawGroup(camera, &map->collision_tiles); 
+  drawGroup(camera, &map->decoration_tiles);
+  drawGroup(camera, &map->crates_group);  
+  drawAnimatedGroup(camera, &map->fg_palm_group); 
+}
 
-  size_t i;
+void drawGroup(CustomCamera *camera, TileGroup *group) {
+  size_t i = 0;
   Tile *tile = NULL;
-  for(i = 0; i < map->bg_palm_group.tiles_count; ++i) {
-    tile = &map->bg_palm_group.anim_tiles[i].tile; 
+  for(i = 0; i < group->tiles_size; ++i) {
+    tile = &group->tiles[i];
     if(tile->active && tile->resource->is_loaded) {
       drawTileWithOffset(tile, camera->offset);
     }
   }
+  
+}
 
-  for(i = 0; i < map->coin_group.tiles_count; ++i) {
-    tile = &map->coin_group.anim_tiles[i].tile;
-    if(tile->active && tile->resource->is_loaded) {
-      drawTileWithOffset(tile, camera->offset);
-    }
-  }
-
-
- for (i = 0; i < map->collision_tiles.tiles_size; ++i) {
-    tile = &map->collision_tiles.tiles[i];
-    if (tile->active && tile->resource->is_loaded)
-      drawTileWithOffset(tile, camera->offset);
-  }
-
-  for (i = 0; i < map->decoration_tiles.tiles_size; ++i) {
-    tile = &map->decoration_tiles.tiles[i];
-    if (tile->active && tile->resource->is_loaded)
-      drawTileWithOffset(tile, camera->offset);
-  }
-
-  for(i = 0; i < map->fg_palm_group.tiles_count; ++i) {
-    tile = &map->fg_palm_group.anim_tiles[i].tile; 
+void drawAnimatedGroup(CustomCamera *camera, AnimatedTileGroup *group) {
+  size_t i = 0;
+  Tile *tile = NULL;
+  for(i = 0; i < group->tiles_count; ++i) {
+    tile = &group->anim_tiles[i].tile; 
     if(tile->active && tile->resource->is_loaded) {
       drawTileWithOffset(tile, camera->offset);
     }

@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "level.h"
 #include "entity.h"
+#include "tile.h"
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -44,6 +45,7 @@ void updateTiles(Game *game);
 void horizontalMovementCollision(Game *game);
 void verticalMovementCollision(Game *game);
 bool checkCoinCollision(Game *game);
+
 
 /* Entities */
 void drawEntities(Game *game);
