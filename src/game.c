@@ -56,24 +56,24 @@ Game initGame() {
 
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
-  
+
   /* Player */
   Player player = initPlayer(current_level.id);
   if (player.animations[0] == NULL) {
     TraceLog(LOG_ERROR, "[GAME] Fejl under initialisering af player struct");
     return (Game){.game_state = GAMESTATE_ERROR, .current_level = {.id = -1}};
   }
-  
-  /* Custom Camera */ 
+
+  /* Custom Camera */
   CustomCamera camera = initCamera();
 
   /* Sky & Water */
   Sky sky = initSky();
-  
+
   const int water_top = 780;
   const int level_width = 11 * TILE_SIZE;
   const int screen_width = GetScreenWidth();
-  Water water = initWater(water_top, level_width, screen_width); 
+  Water water = initWater(water_top, level_width, screen_width);
 
   return (Game){
       .game_state = GAMESTATE_PLAYING,
@@ -113,10 +113,9 @@ bool runGame(Game *game) { // Main game loop
 
 void updateTiles(Game *game) {
   AnimatedTileGroup *animated_tiles[ANIMATED_TILES_SIZE] = {
-    &game->current_level.map.bg_palm_group,
-    &game->current_level.map.fg_palm_group,
-    &game->current_level.map.coin_group
-  };
+      &game->current_level.map.bg_palm_group,
+      &game->current_level.map.fg_palm_group,
+      &game->current_level.map.coin_group};
 
   size_t total_tile_count = 0;
   for (size_t i = 0; i < ANIMATED_TILES_SIZE; ++i) {
@@ -146,43 +145,47 @@ void horizontalMovementCollision(Game *game) {
   Player *player = &game->player;
   Rectangle *player_rect = &player->entity.collision_rect;
   Vector2 *player_direction = &player->entity.direction;
+  Map *map = &game->current_level.map;
 
-  TileGroup coll_tiles = game->current_level.map.collision_tiles;
-  
+  // Opdater horizontal player direction value (x)
   player_rect->x += player_direction->x * player->entity.speed;
-  
-  Tile *coll_tile = NULL;
-  for (size_t i = 0; i < coll_tiles.tiles_size; ++i) {
-    coll_tile = &coll_tiles.tiles[i];
-    if (CheckCollisionRecs(coll_tile->collision_rect, *player_rect)) {
-      if (player_direction->x < 0) {
-        player_rect->x = coll_tile->collision_rect.x + coll_tile->collision_rect.width;
-      } else if (player_direction->x > 0) {
-        player_rect->x = coll_tile->collision_rect.x - player_rect->width;
-      }
-    }
+
+  size_t i = 0;
+  TileGroup coll_tiles = map->collision_tiles;
+  for (i = 0; i < coll_tiles.tiles_size; ++i) {
+    handleHorizontalCollision(game, &coll_tiles.tiles[i]);
   }
 
-  AnimatedTileGroup *coin_group = &game->current_level.map.coin_group;
-  for(size_t i = 0; i < coin_group->tiles_count; ++i) {
+  AnimatedTileGroup *fg_palm_group = &map->fg_palm_group;
+  for (i = 0; i < fg_palm_group->tiles_count; ++i) {
+    handleHorizontalCollision(game, &fg_palm_group->anim_tiles[i].tile);
+  }
+
+  TileGroup *crate_group = &map->crates_group;
+  for(i = 0; i < crate_group->tiles_size; ++i) {
+    handleHorizontalCollision(game, &crate_group->tiles[i]);
+  }
+
+  AnimatedTileGroup *coin_group = &map->coin_group;
+  for (size_t i = 0; i < coin_group->tiles_count; ++i) {
 
     AnimatedTile *anim_tile = &coin_group->anim_tiles[i];
-    if(CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
+    if (CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
       handleCoin(player, anim_tile);
     }
   }
+}
 
-  AnimatedTileGroup *fg_palm_group = &game->current_level.map.fg_palm_group;
-  for(size_t j = 0; j < fg_palm_group->tiles_count; ++j) {
-    AnimatedTile *anim_tile = &fg_palm_group->anim_tiles[j];
-    
-    if(CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
+void handleHorizontalCollision(Game *game, Tile *tile) {
+  Player *player = &game->player;
+  Rectangle *player_rect = &player->entity.collision_rect;
+  Vector2 *player_direction = &player->entity.direction;
+
+  if (CheckCollisionRecs(tile->collision_rect, *player_rect)) {
     if (player_direction->x < 0) {
-        player_rect->x = anim_tile->tile.collision_rect.x + anim_tile->tile.collision_rect.width;
-      } else if (player_direction->x > 0) {
-        player_rect->x = anim_tile->tile.collision_rect.x - player_rect->width;
-      }
-
+      player_rect->x = tile->collision_rect.x + tile->collision_rect.width;
+    } else if (player_direction->x > 0) {
+      player_rect->x = tile->collision_rect.x - player_rect->width;
     }
   }
 }
@@ -191,68 +194,62 @@ void verticalMovementCollision(Game *game) {
   Player *player = &game->player;
   Rectangle *player_rect = &player->entity.collision_rect;
   Vector2 *player_direction = &player->entity.direction;
-
-  TileGroup coll_tiles = game->current_level.map.collision_tiles;
+  Map *map = &game->current_level.map;
 
   applyGravity(player);
   player->on_ground = false;
 
-  for (size_t i = 0; i < coll_tiles.tiles_size; ++i) {
-    
-    Tile *coll_tile = &coll_tiles.tiles[i];
-    if (CheckCollisionRecs(coll_tile->collision_rect, *player_rect)) { 
-      if (player_direction->y > 0) {
-        player_rect->y = coll_tile->collision_rect.y - player_rect->height;
-        
-        player->on_ground = true;
-        player_direction->y = 0;
-
-      } else if (player_direction->y < 0) {
-        player_rect->y = coll_tile->collision_rect.y + coll_tile->collision_rect.height;
-
-        player_direction->y = 0;
-        player->on_ceiling = true;
-      }
-    }
+  TileGroup coll_tiles = map->collision_tiles;
+  size_t i = 0;
+  for(i = 0; i < coll_tiles.tiles_size; ++i) {
+    handleVerticalCollision(game, &coll_tiles.tiles[i]);
   }
 
-  AnimatedTileGroup *coin_group = &game->current_level.map.coin_group;
-  for(size_t i = 0; i < coin_group->tiles_count; ++i) {
+  TileGroup crate_group = map->crates_group;
+  for(i = 0; i < crate_group.tiles_size; ++i) {
+    handleVerticalCollision(game, &crate_group.tiles[i]);
+  }
+ 
+  AnimatedTileGroup *fg_palm_group = &map->fg_palm_group;
+  for(i = 0; i < fg_palm_group->tiles_count; ++i) {
+    handleVerticalCollision(game, &fg_palm_group->anim_tiles[i].tile);
+  }
+
+  AnimatedTileGroup *coin_group = &map->coin_group;
+  for (size_t i = 0; i < coin_group->tiles_count; ++i) {
     AnimatedTile *anim_tile = &coin_group->anim_tiles[i];
-    if(CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
+    if (CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
       handleCoin(player, anim_tile);
     }
   }
 
-  AnimatedTileGroup *fg_palm_group = &game->current_level.map.fg_palm_group;
-  for(size_t j = 0; j < fg_palm_group->tiles_count; ++j) {
-    AnimatedTile *anim_tile = &fg_palm_group->anim_tiles[j];
-    
-    if(CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
-     if (player_direction->y > 0) {
-        player_rect->y = anim_tile->tile.collision_rect.y - player_rect->height;
-        
-        player->on_ground = true;
-        player_direction->y = 0;
-
-      } else if (player_direction->y < 0) {
-        player_rect->y = anim_tile->tile.collision_rect.y + anim_tile->tile.collision_rect.height;
-
-        player_direction->y = 0;
-        player->on_ceiling = true;
-      }
-
-    }
-  }
-
-
-  if (player->on_ground && player_direction->y < 0 ||
-      player_direction->y > 1) {
+  if (player->on_ground && player_direction->y < 0 || player_direction->y > 1) {
     player->on_ground = false;
   }
 
   if (player->on_ceiling && player_direction->y > 0) {
     player->on_ceiling = false;
+  }
+}
+
+void handleVerticalCollision(Game *game, Tile *tile) {
+  Player *player = &game->player;
+  Rectangle *player_rect = &player->entity.collision_rect;
+  Vector2 *player_direction = &player->entity.direction;
+
+  if (CheckCollisionRecs(tile->collision_rect, *player_rect)) {
+    if (player_direction->y > 0) {
+      player_rect->y = tile->collision_rect.y - player_rect->height;
+
+      player->on_ground = true;
+      player_direction->y = 0;
+
+    } else if (player_direction->y < 0) {
+      player_rect->y = tile->collision_rect.y + tile->collision_rect.height;
+
+      player_direction->y = 0;
+      player->on_ceiling = true;
+    }
   }
 }
 

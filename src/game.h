@@ -44,7 +44,11 @@ void updateTiles(Game *game);
 /* Collision */
 void horizontalMovementCollision(Game *game);
 void verticalMovementCollision(Game *game);
+/* Til tiles */
+void handleVerticalCollision(Game *game, Tile *tile);
+void handleHorizontalCollision(Game *game, Tile *tile);
 bool checkCoinCollision(Game *game);
+
 
 
 /* Entities */
