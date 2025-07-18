@@ -7,7 +7,6 @@
 #include <stdio.h>
 
 Entity createEntity(EntityType type) {
-  // TODO : Ændre spawn position 
   Vector2 pos = { .x = 0, .y = 0};
   Entity ret = {
     .type = type,

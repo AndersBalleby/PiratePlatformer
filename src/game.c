@@ -170,6 +170,20 @@ void horizontalMovementCollision(Game *game) {
       handleCoin(player, anim_tile);
     }
   }
+
+  AnimatedTileGroup *fg_palm_group = &game->current_level.map.fg_palm_group;
+  for(size_t j = 0; j < fg_palm_group->tiles_count; ++j) {
+    AnimatedTile *anim_tile = &fg_palm_group->anim_tiles[j];
+    
+    if(CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
+    if (player_direction->x < 0) {
+        player_rect->x = anim_tile->tile.collision_rect.x + anim_tile->tile.collision_rect.width;
+      } else if (player_direction->x > 0) {
+        player_rect->x = anim_tile->tile.collision_rect.x - player_rect->width;
+      }
+
+    }
+  }
 }
 
 void verticalMovementCollision(Game *game) {
@@ -200,6 +214,36 @@ void verticalMovementCollision(Game *game) {
       }
     }
   }
+
+  AnimatedTileGroup *coin_group = &game->current_level.map.coin_group;
+  for(size_t i = 0; i < coin_group->tiles_count; ++i) {
+    AnimatedTile *anim_tile = &coin_group->anim_tiles[i];
+    if(CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
+      handleCoin(player, anim_tile);
+    }
+  }
+
+  AnimatedTileGroup *fg_palm_group = &game->current_level.map.fg_palm_group;
+  for(size_t j = 0; j < fg_palm_group->tiles_count; ++j) {
+    AnimatedTile *anim_tile = &fg_palm_group->anim_tiles[j];
+    
+    if(CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
+     if (player_direction->y > 0) {
+        player_rect->y = anim_tile->tile.collision_rect.y - player_rect->height;
+        
+        player->on_ground = true;
+        player_direction->y = 0;
+
+      } else if (player_direction->y < 0) {
+        player_rect->y = anim_tile->tile.collision_rect.y + anim_tile->tile.collision_rect.height;
+
+        player_direction->y = 0;
+        player->on_ceiling = true;
+      }
+
+    }
+  }
+
 
   if (player->on_ground && player_direction->y < 0 ||
       player_direction->y > 1) {

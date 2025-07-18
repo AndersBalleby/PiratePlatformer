@@ -96,7 +96,7 @@ void registerAnimatedTileGroup(const char *group_id, const char *csv_path,
               strcpy(anim_buffer, "coins_gold");
             } else if (value == 1) {
               strcpy(rs_buffer, "coins_silver_0");
-              strcpy(anim_buffer, "coins_silver_0");
+              strcpy(anim_buffer, "coins_silver");
             }
           } else if(strcmp(group_id, "palm_bg") == 0) { /* BG PALMS GROUP */
             strcpy(rs_buffer, "palm_bg_0");
