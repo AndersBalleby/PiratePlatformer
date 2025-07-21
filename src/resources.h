@@ -32,14 +32,14 @@ typedef struct SpritesheetCollection {
   int size;
 } SpritesheetCollection;
 
-#define MAX_ANIMATION_LENGTH 7 
+#define MAX_ANIMATION_LENGTH 8 
 typedef struct Animation {
   char *id;
   Resource *resources[MAX_ANIMATION_LENGTH];
   size_t count;
 } Animation;
 
-#define MAX_ANIMATIONS 10
+#define MAX_ANIMATIONS 15
 typedef struct AnimationCollection {
   Animation animations[MAX_ANIMATIONS];
   size_t count;

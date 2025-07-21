@@ -8,4 +8,7 @@
 
 int extractNumber(const char *filename);
 int compareFilePaths(const void *a, const void *b);
-int readCSVToMap(const char *filename, int rows, int cols, int (*map)[cols]);
+
+#define ROWS 11
+#define COLS 60
+int readCSVToMap(const char *filename, int map[ROWS][COLS]);

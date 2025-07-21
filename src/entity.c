@@ -6,8 +6,7 @@
 #include <raylib.h>
 #include <stdio.h>
 
-Entity createEntity(EntityType type) {
-  Vector2 pos = { .x = 0, .y = 0};
+Entity createEntity(EntityType type, Vector2 pos) {
   Entity ret = {
     .type = type,
     .position = pos,
@@ -40,6 +39,24 @@ Entity createEntity(EntityType type) {
       break;
     case ENEMY: 
       // Todo
+
+      animation = getAnimation("enemy_run");
+      if(animation == NULL) {
+        TraceLog(LOG_ERROR, "[ENTITY] Kunne ikke finde animation til enemy entity");
+        return (Entity) { .animation = NULL };
+      }
+
+      ret.collision_rect = (Rectangle) {
+        .x = pos.x,
+        .y = pos.y,
+        .width = animation->resources[0]->texture.width,
+        .height = animation->resources[0]->texture.height,
+      };
+      
+      ret.speed = ENEMY_SPEED;
+      ret.health = ENEMY_MAX_HEALTH;
+      ret.animation_index = 0;
+      ret.animation = animation;
       break;
     default:
       TraceLog(LOG_ERROR, "[ENTITY] Kunne ikke oprette ukendt entity type: \"%d\"", type);
@@ -74,8 +91,12 @@ void getPlayerInput(Player *player) {
   }
 }
 
+void updateEntity(Entity *entity) {
+  animateEntity(entity);
+}
+
 void animateEntity(Entity *entity) {
-  TraceLog(LOG_FATAL, "[ENTITY] animateEntity er ikke implementeret endnu");
+  entity->animation_index = fmod(entity->animation_index + ENEMY_ANIMATION_SPEED, 6);
 }
 
 static int maxFrames[] = {5, 6, 1, 3};
@@ -110,15 +131,13 @@ void applyGravity(Player *player) {
   player->entity.collision_rect.y += player->entity.direction.y;
 }
 
-#define ROWS 11 // Antal rows i CSV
-#define COLS 60 // Antal cols i CSV
 Vector2 getPlayerSpawnPos(int level_id) {
   int map[ROWS][COLS];
   
   char buffer[128];
   snprintf(buffer, sizeof(buffer), CSV_PATH_PLAYER_SPAWN, level_id, level_id);
 
-  if(readCSVToMap(buffer, ROWS, COLS, map)) {
+  if(readCSVToMap(buffer, map)) {
     for(size_t i = 0; i < ROWS; ++i) {
       for(size_t j = 0; j < COLS; ++j) {
         int value = map[i][j];
@@ -155,8 +174,20 @@ void handleCoin(Player *player, AnimatedTile *coin) {
   coin->tile.active = false;
 }
 
-void drawEntity(Entity *entity) {
+void drawEntity(Entity *entity, Vector2 offset) {
   if(entity == NULL) return;
-  DrawTexture(entity->animation->resources[(int) entity->animation_index]->texture, entity->position.x, entity->position.y, WHITE);
+
+  Texture2D current_texture = entity->animation->resources[(int) entity->animation_index]->texture;
+
+  Vector2 screen_pos = {entity->position.x - offset.x,
+                        entity->position.y - offset.y};
+
+  Rectangle source = {0.0f, 0.0f, (float) -(current_texture.width), (float) current_texture.height};
+
+  if(entity->on_right) {
+    DrawTexture(current_texture, screen_pos.x, screen_pos.y, WHITE);
+  } else {
+    DrawTextureRec(current_texture, source, screen_pos, WHITE);
+  }
 }
 

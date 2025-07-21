@@ -2,12 +2,14 @@
 #include "background.h"
 #include "camera.h"
 #include "entity.h"
+#include "files.h"
 #include "level.h"
 #include "map.h"
 #include "paths.h"
 #include "resources.h"
 #include "tile.h"
 #include <raylib.h>
+#include <string.h>
 
 bool loadResources() {
   /* Load alle single resources */
@@ -30,7 +32,9 @@ bool loadResources() {
       loadAnimation("coins_gold", ANIMATION_COIN_GOLD) == NULL ||
       loadAnimation("palm_bg", ANIMATION_PALM_BG) == NULL ||
       loadAnimation("palm_large", ANIMATION_PALM_LARGE) == NULL ||
-      loadAnimation("palm_small", ANIMATION_PALM_SMALL) == NULL) {
+      loadAnimation("palm_small", ANIMATION_PALM_SMALL) == NULL ||
+      loadAnimation("enemy_explosion", ANIMATION_ENEMY_EXPLOSION) == NULL ||
+      loadAnimation("enemy_run", ANIMATION_ENEMY_RUN) == NULL) {
     return false;
   }
 
@@ -39,6 +43,7 @@ bool loadResources() {
 
 Game initGame() {
   const int START_LEVEL = 1;
+  Game game = {};
 
   TraceLog(LOG_INFO, "[GAME] Indstiller game state og current level");
   TraceLog(LOG_INFO, "[GAME] Nuværende Level: \"%d\"", START_LEVEL);
@@ -74,16 +79,24 @@ Game initGame() {
   const int level_width = 11 * TILE_SIZE;
   const int screen_width = GetScreenWidth();
   Water water = initWater(water_top, level_width, screen_width);
+  
+  Entity entities[MAX_ENTITIES] = {};
+  size_t entity_count = 0;
+  initEntities(entities, &entity_count);
 
-  return (Game){
-      .game_state = GAMESTATE_PLAYING,
-      .current_level = current_level,
-      .camera = camera,
-      .sky = sky,
-      .water = water,
-      .player = player,
-      .entity_count = 0,
-  };
+  game.game_state = GAMESTATE_PLAYING;
+  game.current_level = current_level;
+  game.camera = camera;
+  game.sky = sky;
+  game.water = water;
+  game.player = player;
+  game.entity_count = entity_count;
+  
+  for(size_t i = 0; i < entity_count; ++i) {
+    game.entities[i] = entities[i];
+  }
+
+  return game;
 }
 
 bool runGame(Game *game) { // Main game loop
@@ -95,6 +108,7 @@ bool runGame(Game *game) { // Main game loop
   /* Updates */
   updateTiles(game);
   updatePlayer(&game->player);
+  updateEntities(game);
   updateWater(&game->water);
 
   /* Collision */
@@ -105,11 +119,18 @@ bool runGame(Game *game) { // Main game loop
   drawSky(&game->sky);
   drawGame(game);
   drawPlayer(&game->player, game->camera.offset);
-  drawEntities(game);
+  drawEntities(game, game->camera.offset);
   drawWater(&game->water);
 
   return true;
 }
+
+void updateEntities(Game *game) {
+  for(size_t i = 0; i < game->entity_count; ++i) {
+    updateEntity(&game->entities[i]);
+  }
+}
+
 
 void updateTiles(Game *game) {
   AnimatedTileGroup *animated_tiles[ANIMATED_TILES_SIZE] = {
@@ -133,11 +154,13 @@ void drawGame(Game *game) {
   customDraw(&game->camera, &game->current_level.map, &game->player);
 }
 
-void drawEntities(Game *game) {
-  if (game->entity_count == 0)
+void drawEntities(Game *game, Vector2 offset) {
+  if (game->entity_count == 0) {
+   TraceLog(LOG_INFO, "TEST");
     return;
-  for (int i = 0; i < game->entity_count; ++i) {
-    drawEntity(&game->entities[i]);
+  }
+   for (size_t i = 0; i < game->entity_count; ++i) {
+    drawEntity(&game->entities[i], offset);
   }
 }
 
@@ -253,9 +276,27 @@ void handleVerticalCollision(Game *game, Tile *tile) {
   }
 }
 
+
+void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count) {
+  int map[ROWS][COLS];
+  Animation *enemy_run = getAnimation("enemy_run");
+  if(readCSVToMap("../levels/1/level_1_enemies.csv", map)) {
+    for(size_t i = 0; i < 11; ++i) {
+      for(size_t j = 0; j < 60; ++j) {
+        int value = map[i][j];
+        if(value != -1) {
+          int y_offset = TILE_SIZE - enemy_run->resources[0]->texture.height;
+          out_list[(*entity_count)++] = createEntity(ENEMY, (Vector2) {j * TILE_SIZE, (i * TILE_SIZE) + y_offset});;
+        }
+      }
+    }
+  }
+}
+
+
 Player initPlayer(int level_id) {
   Player player = {
-      .entity = createEntity(PLAYER),
+      .entity = createEntity(PLAYER, (Vector2) {0,0}),
       .on_ground = false,
       .on_ceiling = false,
       .last_jump_time = 0.0f,

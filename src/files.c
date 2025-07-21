@@ -17,8 +17,7 @@ int compareFilePaths(const void *a, const void *b) {
 }
 
 #define MAX_LINE_LENGTH 1024
-int readCSVToMap(const char *filename, int rows, int cols,
-                 int map[rows][cols]) {
+int readCSVToMap(const char *filename, int map[ROWS][COLS]) {
   FILE *file = fopen(filename, "r");
   if (!file) {
     TraceLog(LOG_ERROR, "[FILES] Fejl ved åbning af csv fil");
@@ -28,7 +27,7 @@ int readCSVToMap(const char *filename, int rows, int cols,
   char line[MAX_LINE_LENGTH];
   int row = 0;
 
-  while (fgets(line, sizeof(line), file) && row < rows) {
+  while (fgets(line, sizeof(line), file) && row < ROWS) {
     char *token;
     int col = 0;
 
@@ -36,13 +35,13 @@ int readCSVToMap(const char *filename, int rows, int cols,
     line[strcspn(line, "\n")] = 0;
 
     token = strtok(line, ",");
-    while (token && col < cols) {
+    while (token && col < COLS) {
       map[row][col] = atoi(token);
       token = strtok(NULL, ",");
       col++;
     }
 
-    if (col != cols) {
+    if (col != COLS) {
       TraceLog(LOG_ERROR, "[FILES] Forkert antal kolonner i række %d", row);
       fclose(file);
       return 0;
@@ -51,7 +50,7 @@ int readCSVToMap(const char *filename, int rows, int cols,
     row++;
   }
 
-  if (row != rows) {
+  if (row != ROWS) {
     TraceLog(LOG_ERROR, "[FILES] Forkert antal rækker i filen %s", filename);
     fclose(file);
     return 0;

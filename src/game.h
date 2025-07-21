@@ -23,7 +23,7 @@ typedef struct Game {
   Water water;
   Player player;
   Entity entities[15];
-  int entity_count;
+  size_t entity_count;
 } Game;
 
 /* Resources */
@@ -49,7 +49,7 @@ void handleVerticalCollision(Game *game, Tile *tile);
 void handleHorizontalCollision(Game *game, Tile *tile);
 bool checkCoinCollision(Game *game);
 
-
-
 /* Entities */
-void drawEntities(Game *game);
+void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count);
+void updateEntities(Game *game);
+void drawEntities(Game *game, Vector2 offset);

@@ -49,15 +49,13 @@ Map createMap(int level_id) {
   };
 }
 
-#define ROWS 11 // Antal rows i CSV
-#define COLS 60 // Antal cols i CSV
 void registerTileGroup(const char *group_id, const char *csv_path,
                        TileGroup *out_group, TileType type) {
   Tile tiles[MAX_TILES];
   int tiles_size = 0;
 
   int map[ROWS][COLS];
-  if (readCSVToMap(csv_path, ROWS, COLS, map)) {
+  if (readCSVToMap(csv_path, map)) {
     for (int i = 0; i < ROWS; ++i) {
       for (int j = 0; j < COLS; ++j) {
         int value = map[i][j];
@@ -89,7 +87,7 @@ void registerAnimatedTileGroup(const char *group_id, const char *csv_path,
   size_t tiles_count = 0;
   int map[ROWS][COLS];
   int value = -1;
-  if (readCSVToMap(csv_path, ROWS, COLS, map)) {
+  if (readCSVToMap(csv_path, map)) {
     for (size_t i = 0; i < ROWS; ++i) {
       for (size_t j = 0; j < COLS; ++j) {
         value = map[i][j];

@@ -8,6 +8,8 @@
 #define CSV_PATH_BG_PALMS     "../levels/%d/level_%d_bg_palms.csv"
 #define CSV_PATH_FG_PALMS     "../levels/%d/level_%d_fg_palms.csv"
 #define CSV_PATH_CRATE        "../levels/%d/level_%d_crates.csv"
+#define CSV_PATH_ENEMIES      "../levels/%d/level_%d_enemies.csv"
+#define CSV_PATH_CONSTRAINTS  "../levels/%d/level_%d_constraints.csv"
 
 /* SPRITESHEET FILER */
 #define SPRITESHEET_TERRAIN "../resources/terrain/terrain_tiles.png"
@@ -21,14 +23,25 @@
 #define SPRITE_SKY_MIDDLE "../resources/decoration/sky/sky_middle.png"
 #define SPRITE_SKY_BOTTOM "../resources/decoration/sky/sky_bottom.png"
 
-/* ANIMATION PATHS */
+/* -- ANIMATION PATHS -- */
+/* PLAYER */
 #define ANIMATION_PLAYER_RUN "../resources/character/run"
 #define ANIMATION_PLAYER_IDLE "../resources/character/idle"
 #define ANIMATION_PLAYER_FALL "../resources/character/fall"
 #define ANIMATION_PLAYER_JUMP "../resources/character/jump"
+
+/* ENEMY*/
+#define ANIMATION_ENEMY_EXPLOSION "../resources/enemy/explosion"
+#define ANIMATION_ENEMY_RUN "../resources/enemy/run"
+
+/* WATER */
 #define ANIMATION_WATER "../resources/decoration/water"
+
+/* COIN */
 #define ANIMATION_COIN_SILVER "../resources/coins/silver"
 #define ANIMATION_COIN_GOLD "../resources/coins/gold"
+
+/* FG & BG PALMS */
 #define ANIMATION_PALM_BG "../resources/terrain/palm_bg"
 #define ANIMATION_PALM_LARGE "../resources/terrain/palm_large"
 #define ANIMATION_PALM_SMALL "../resources/terrain/palm_small"
