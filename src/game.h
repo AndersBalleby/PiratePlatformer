@@ -50,6 +50,7 @@ void handleHorizontalCollision(Game *game, Tile *tile);
 bool checkCoinCollision(Game *game);
 
 /* Entities */
-void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count);
+void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count, int level_id);
 void updateEntities(Game *game);
 void drawEntities(Game *game, Vector2 offset);
+void checkEnemyConstraints(Game *game);

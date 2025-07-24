@@ -46,6 +46,7 @@ void customDraw(CustomCamera *camera, Map *map, Player *player) {
   drawGroup(camera, &map->collision_tiles); 
   drawGroup(camera, &map->decoration_tiles);
   drawGroup(camera, &map->crates_group);  
+  //drawGroup(camera, &map->constraint_group); // Til debug af constraints
   drawAnimatedGroup(camera, &map->fg_palm_group); 
 }
 

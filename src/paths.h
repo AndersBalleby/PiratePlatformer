@@ -15,6 +15,7 @@
 #define SPRITESHEET_TERRAIN "../resources/terrain/terrain_tiles.png"
 #define SPRITESHEET_GRASS "../resources/decoration/grass/grass.png"
 #define SPRITESHEET_COINS "../resources/coins/coin_tiles.png"
+#define SPRITESHEET_CONSTRAINTS "../resources/enemy/setup_tile.png"
 
 /* SPRITES */
 #define SPRITE_PLAYER "../resources/character/idle/1.png"

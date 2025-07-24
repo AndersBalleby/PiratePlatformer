@@ -24,6 +24,10 @@ Map createMap(int level_id) {
   snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_CRATE, level_id, level_id);
   registerTileGroup("crate", buffer_path, &crate_group, TILETYPE_CRATE);
 
+  TileGroup constraint_group = {};
+  snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_CONSTRAINTS, level_id, level_id);
+  registerTileGroup("constraint", buffer_path, &constraint_group, TILETYPE_CONSTRAINT);
+
   AnimatedTileGroup coins_group = {};
   snprintf(buffer_path, sizeof(buffer_path), CSV_PATH_COINS, level_id,
            level_id);
@@ -43,6 +47,7 @@ Map createMap(int level_id) {
       .collision_tiles = terrain_group,
       .decoration_tiles = grass_group,
       .crates_group = crate_group,
+      .constraint_group = constraint_group,
       .coin_group = coins_group,
       .bg_palm_group = bg_palms_group,
       .fg_palm_group = fg_palms_group,

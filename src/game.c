@@ -21,7 +21,9 @@ bool loadResources() {
   /* Load alle spritesheets */
   if (loadSpritesheet("terrain", SPRITESHEET_TERRAIN, 256, 256) == NULL ||
       loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64) == NULL ||
-      loadSpritesheet("coins", SPRITESHEET_COINS, 128, 64) == NULL)
+      loadSpritesheet("coins", SPRITESHEET_COINS, 128, 64) == NULL ||
+      loadSpritesheet("constraint", SPRITESHEET_CONSTRAINTS, 128, 64) == NULL)
+    // TODO: COnstraints
     return false;
 
   if (loadAnimation("player_run", ANIMATION_PLAYER_RUN) == NULL ||
@@ -82,7 +84,7 @@ Game initGame() {
   
   Entity entities[MAX_ENTITIES] = {};
   size_t entity_count = 0;
-  initEntities(entities, &entity_count);
+  initEntities(entities, &entity_count, current_level.id);
 
   game.game_state = GAMESTATE_PLAYING;
   game.current_level = current_level;
@@ -92,6 +94,7 @@ Game initGame() {
   game.player = player;
   game.entity_count = entity_count;
   
+  /* Copy entity structs */
   for(size_t i = 0; i < entity_count; ++i) {
     game.entities[i] = entities[i];
   }
@@ -114,6 +117,7 @@ bool runGame(Game *game) { // Main game loop
   /* Collision */
   horizontalMovementCollision(game);
   verticalMovementCollision(game);
+  checkEnemyConstraints(game);
 
   /* Drawing */
   drawSky(&game->sky);
@@ -161,6 +165,21 @@ void drawEntities(Game *game, Vector2 offset) {
   }
    for (size_t i = 0; i < game->entity_count; ++i) {
     drawEntity(&game->entities[i], offset);
+  }
+}
+
+void checkEnemyConstraints(Game *game) {
+  Entity *entity = NULL;
+  Map *map = &game->current_level.map;
+  
+  for(size_t i = 0; i < game->entity_count; ++i) {
+    entity = &game->entities[i];
+
+    for(size_t j = 0; j < map->constraint_group.tiles_size; ++j) {
+      if(CheckCollisionRecs(entity->collision_rect, map->constraint_group.tiles[j].collision_rect)) {
+       reverseEntity(entity); 
+      }
+    }
   }
 }
 
@@ -277,10 +296,14 @@ void handleVerticalCollision(Game *game, Tile *tile) {
 }
 
 
-void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count) {
+void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count, int level_id) {
   int map[ROWS][COLS];
   Animation *enemy_run = getAnimation("enemy_run");
-  if(readCSVToMap("../levels/1/level_1_enemies.csv", map)) {
+  
+  char buffer[128];
+  snprintf(buffer, sizeof(buffer), CSV_PATH_ENEMIES, level_id, level_id);
+
+  if(readCSVToMap(buffer, map)) {
     for(size_t i = 0; i < 11; ++i) {
       for(size_t j = 0; j < 60; ++j) {
         int value = map[i][j];

@@ -12,6 +12,7 @@ typedef enum TileType {
   TILETYPE_PALMS_BG,
   TILETYPE_PALMS_FG,
   TILETYPE_CRATE,
+  TILETYPE_CONSTRAINT,
 } TileType;
 
 typedef struct Tile {

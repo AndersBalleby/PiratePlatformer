@@ -9,6 +9,7 @@ typedef struct Map {
   TileGroup collision_tiles;
   TileGroup decoration_tiles;
   TileGroup crates_group;
+  TileGroup constraint_group;
   AnimatedTileGroup bg_palm_group;
   AnimatedTileGroup fg_palm_group;
   AnimatedTileGroup coin_group;

@@ -16,6 +16,7 @@
 #define ENEMY_MAX_HEALTH 1
 #define ENEMY_SPEED 5.0f
 #define ENEMY_ANIMATION_SPEED 0.13
+#define ENEMY_MAX_ANIMATIONS 6
 
 typedef enum PlayerState {
   PLAYER_STATE_IDLE,
@@ -57,6 +58,8 @@ typedef struct Player {
 Entity createEntity(EntityType type, Vector2 pos);
 void drawEntity(Entity *entity, Vector2 offset);
 void updateEntity(Entity *entity);
+void moveEntity(Entity *entity);
+void reverseEntity(Entity *entity);
 void animateEntity(Entity *entity);
 
 /* PLAYER */
