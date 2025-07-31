@@ -54,3 +54,4 @@ void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count, int level
 void updateEntities(Game *game);
 void drawEntities(Game *game, Vector2 offset);
 void checkEnemyConstraints(Game *game);
+void checkEnemyCollision(Game *game);

@@ -41,6 +41,7 @@ typedef struct Entity {
   bool on_right;
   int health;
   EntityType type;
+  bool alive;
 } Entity;
 
 typedef struct Player {
@@ -61,6 +62,7 @@ void updateEntity(Entity *entity);
 void moveEntity(Entity *entity);
 void reverseEntity(Entity *entity);
 void animateEntity(Entity *entity);
+void killEntity(Entity *entity);
 
 /* PLAYER */
 void updatePlayer(Player *player);

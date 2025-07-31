@@ -118,6 +118,7 @@ bool runGame(Game *game) { // Main game loop
   horizontalMovementCollision(game);
   verticalMovementCollision(game);
   checkEnemyConstraints(game);
+  checkEnemyCollision(game);
 
   /* Drawing */
   drawSky(&game->sky);
@@ -165,6 +166,20 @@ void drawEntities(Game *game, Vector2 offset) {
   }
    for (size_t i = 0; i < game->entity_count; ++i) {
     drawEntity(&game->entities[i], offset);
+  }
+}
+
+void checkEnemyCollision(Game *game) {
+  Entity *entity = NULL;
+  Player player = game->player;
+  Map *map = &game->current_level.map;
+
+  for(size_t i = 0; i < game->entity_count; ++i) {
+    entity = &game->entities[i];
+    if(CheckCollisionRecs(entity->collision_rect, player.entity.collision_rect)) {
+      if(player.entity.direction.y > 0)
+        killEntity(entity);
+      }
   }
 }
 

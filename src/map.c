@@ -132,5 +132,4 @@ void registerAnimatedTileGroup(const char *group_id, const char *csv_path,
   out_group->id = group_id;
   out_group->tiles_count = tiles_count;
   memcpy(out_group->anim_tiles, tiles, sizeof(AnimatedTile) * tiles_count);
-
 }

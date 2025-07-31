@@ -28,6 +28,7 @@ Entity createEntity(EntityType type, Vector2 pos) {
     ret.health = PLAYER_MAX_HEALTH;
     ret.animation_index = 0;
     ret.animation = animation;
+    ret.alive = true;
 
     break;
   case ENEMY:
@@ -48,6 +49,7 @@ Entity createEntity(EntityType type, Vector2 pos) {
     ret.direction.x = -1;
     ret.animation = animation;
     ret.on_right = false;
+    ret.alive = true;
     break;
   default:
     TraceLog(LOG_ERROR,
@@ -92,10 +94,17 @@ void getPlayerInput(Player *player) {
 }
 
 void updateEntity(Entity *entity) { 
+  if(!entity->alive)
+    return;
+
   animateEntity(entity);
   moveEntity(entity);
 
   entity->position.x = entity->collision_rect.x;
+}
+
+void killEntity(Entity *entity) {
+  entity->alive = false;
 }
 
 void moveEntity(Entity *entity) {
@@ -193,6 +202,9 @@ void handleCoin(Player *player, AnimatedTile *coin) {
 
 void drawEntity(Entity *entity, Vector2 offset) {
   if (entity == NULL)
+    return;
+
+  if(!entity->alive)
     return;
 
   Texture2D current_texture =
