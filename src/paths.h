@@ -50,3 +50,7 @@
 /* SOUNDS & MUSIC */
 #define MUSIC_LEVEL_PATH "../audio/level_music.wav"
 #define MUSIC_OVERWORLD_PATH "../audio/overworld_music.wav"
+#define SOUND_COIN_PATH "../audio/effects/coin.wav"
+#define SOUND_HIT_PATH "../audio/effects/hit.wav"
+#define SOUND_JUMP_PATH "../audio/effects/jump.wav"
+#define SOUND_STOMP_PATH "../audio/effects/stomp.wav"

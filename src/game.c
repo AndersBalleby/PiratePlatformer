@@ -1,4 +1,5 @@
 #include "game.h"
+#include "audio.h"
 #include "background.h"
 #include "camera.h"
 #include "entity.h"
@@ -180,6 +181,7 @@ void checkEnemyCollision(Game *game) {
       if(player->entity.direction.y > 0 && entity->alive) {
         killEntity(entity);
         player->entity.direction.y = PLAYER_KILL_JUMP_SPEED; // lille hop
+        playSound(SOUND_STOMP);
       }
     }
   }
@@ -229,8 +231,10 @@ void horizontalMovementCollision(Game *game) {
   for (size_t i = 0; i < coin_group->tiles_count; ++i) {
 
     AnimatedTile *anim_tile = &coin_group->anim_tiles[i];
+    if(!anim_tile->tile.active) continue;
+
     if (CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
-      handleCoin(player, anim_tile);
+      handleCoin(player, anim_tile);      
     }
   }
 }
@@ -276,7 +280,9 @@ void verticalMovementCollision(Game *game) {
 
   AnimatedTileGroup *coin_group = &map->coin_group;
   for (size_t i = 0; i < coin_group->tiles_count; ++i) {
+    
     AnimatedTile *anim_tile = &coin_group->anim_tiles[i];
+    if(!anim_tile->tile.active) continue;
     if (CheckCollisionRecs(anim_tile->tile.collision_rect, *player_rect)) {
       handleCoin(player, anim_tile);
     }

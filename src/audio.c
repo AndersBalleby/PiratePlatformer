@@ -2,8 +2,13 @@
 #include "paths.h"
 #include <raylib.h>
 
-static Music music_arr[2];
+#define MUSIC_COUNT 2
+static Music music_arr[MUSIC_COUNT];
 static Music currently_playing;
+
+#define SOUND_COUNT 4
+static Sound sound_arr[SOUND_COUNT];
+
 bool initAudio(void) {
   InitAudioDevice();
 
@@ -12,13 +17,23 @@ bool initAudio(void) {
   }
 
   loadMusic();
+  loadSounds();
   SetMasterVolume(MASTER_VOLUME);
   return true;
 }
 
 void closeAudio(void) {
-  UnloadMusicStream(music_arr[MUSIC_LEVEL]);
-  UnloadMusicStream(music_arr[MUSIC_OVERWORLD]);
+  size_t i;
+  /* Unload Musik */
+  for(i = 0; i < MUSIC_COUNT; ++i) {
+    UnloadMusicStream(music_arr[i]);
+  }
+    
+  /* Unload Lydeffekter */
+  for(i = 0; i < SOUND_COUNT; ++i) {
+    UnloadSound(sound_arr[i]);
+  }
+
   CloseAudioDevice();
 }
 
@@ -36,9 +51,21 @@ void handleMusic(GameState state) {
 }
 
 void loadMusic(void) {
-  music_arr[MUSIC_LEVEL] = LoadMusicStream(MUSIC_LEVEL_PATH);
+  music_arr[MUSIC_LEVEL]     = LoadMusicStream(MUSIC_LEVEL_PATH);
   music_arr[MUSIC_OVERWORLD] = LoadMusicStream(MUSIC_OVERWORLD_PATH);
 }
+
+void loadSounds(void) {
+  sound_arr[SOUND_COIN]  = LoadSound(SOUND_COIN_PATH);
+  sound_arr[SOUND_HIT]   = LoadSound(SOUND_HIT_PATH);
+  sound_arr[SOUND_JUMP]  = LoadSound(SOUND_JUMP_PATH);
+  sound_arr[SOUND_STOMP] = LoadSound(SOUND_STOMP_PATH);
+}
+
+void playSound(SoundType type) {
+  PlaySound(sound_arr[type]);
+}
+
 
 void checkAndPlay(MusicType type) {
   if (!IsMusicStreamPlaying(music_arr[type])) {

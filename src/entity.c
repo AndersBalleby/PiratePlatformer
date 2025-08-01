@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "audio.h"
 #include "files.h"
 #include "paths.h"
 #include "resources.h"
@@ -145,7 +146,10 @@ void updatePlayerState(Player *player) {
   }
 }
 
-void jump(Player *player) { player->entity.direction.y = PLAYER_JUMP_SPEED; }
+void jump(Player *player) { 
+  player->entity.direction.y = PLAYER_JUMP_SPEED;
+  playSound(SOUND_JUMP);
+}
 
 void applyGravity(Player *player) {
   player->entity.direction.y += player->gravity;
@@ -198,6 +202,7 @@ void drawPlayer(Player *player, Vector2 offset) {
 
 void handleCoin(Player *player, AnimatedTile *coin) {
   coin->tile.active = false;
+  playSound(SOUND_COIN);
 }
 
 void drawEntity(Entity *entity, Vector2 offset) {

@@ -25,11 +25,11 @@ int main(void) {
     TraceLog(LOG_ERROR, "Fejl under initialisering af audio device");
     TraceLog(LOG_ERROR, "Afslutter programmet");
   } else { // Begynd game loop
-  
     while (!WindowShouldClose()) {
       BeginDrawing();      
 
       handleMusic(game.game_state);
+ 
       if(!runGame(&game)) {
         EndDrawing();
         break;
