@@ -171,15 +171,17 @@ void drawEntities(Game *game, Vector2 offset) {
 
 void checkEnemyCollision(Game *game) {
   Entity *entity = NULL;
-  Player player = game->player;
+  Player *player = &game->player;
   Map *map = &game->current_level.map;
 
   for(size_t i = 0; i < game->entity_count; ++i) {
     entity = &game->entities[i];
-    if(CheckCollisionRecs(entity->collision_rect, player.entity.collision_rect)) {
-      if(player.entity.direction.y > 0)
+    if(CheckCollisionRecs(entity->collision_rect, player->entity.collision_rect)) {
+      if(player->entity.direction.y > 0 && entity->alive) {
         killEntity(entity);
+        player->entity.direction.y = PLAYER_KILL_JUMP_SPEED; // lille hop
       }
+    }
   }
 }
 
