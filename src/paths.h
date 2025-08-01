@@ -46,3 +46,7 @@
 #define ANIMATION_PALM_BG "../resources/terrain/palm_bg"
 #define ANIMATION_PALM_LARGE "../resources/terrain/palm_large"
 #define ANIMATION_PALM_SMALL "../resources/terrain/palm_small"
+
+/* SOUNDS & MUSIC */
+#define MUSIC_LEVEL_PATH "../audio/level_music.wav"
+#define MUSIC_OVERWORLD_PATH "../audio/overworld_music.wav"
