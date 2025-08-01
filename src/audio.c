@@ -46,6 +46,7 @@ void handleMusic(GameState state) {
     checkAndPlay(MUSIC_LEVEL);
     break;
   default:
+    TraceLog(LOG_ERROR, "[AUDIO] Ukendt gamestate - springer over musik");
     break;
   }
 }

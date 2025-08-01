@@ -6,6 +6,7 @@
 #include <math.h>
 #include <raylib.h>
 #include <stdio.h>
+#include <string.h>
 
 Entity createEntity(EntityType type, Vector2 pos) {
   Entity ret = {
@@ -201,6 +202,12 @@ void drawPlayer(Player *player, Vector2 offset) {
 }
 
 void handleCoin(Player *player, AnimatedTile *coin) {
+  if(strcmp(coin->animation->id, "coins_gold") == 0) {
+    player->coins += 5;
+  } else {
+    player->coins++;
+  }
+
   coin->tile.active = false;
   playSound(SOUND_COIN);
 }

@@ -12,6 +12,6 @@ typedef struct CustomCamera {
 CustomCamera initCamera();
 void boxTargetCamera(CustomCamera *camera, Player *player);
 void drawTileWithOffset(Tile *tile, Vector2 offset);
-void customDraw(CustomCamera *camera, Map *map, Player *player);
+void customDraw(CustomCamera *camera, Map *map, Player *player, Entity *entities, size_t entity_count);
 void drawAnimatedGroup(CustomCamera *camera, AnimatedTileGroup *group);
 void drawGroup(CustomCamera *camera, TileGroup *group);

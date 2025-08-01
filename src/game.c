@@ -9,13 +9,16 @@
 #include "paths.h"
 #include "resources.h"
 #include "tile.h"
+#include "ui.h"
 #include <raylib.h>
 #include <string.h>
 
 bool loadResources() {
   /* Load alle single resources */
   if (loadResource("player", LoadTexture(SPRITE_PLAYER)) == NULL ||
-      loadResource("crate", LoadTexture(SPRITE_CRATE)) == NULL) {
+      loadResource("crate", LoadTexture(SPRITE_CRATE)) == NULL ||
+      loadResource("health_bar", LoadTexture(UI_HEALTH_BAR_PATH)) == NULL ||
+      loadResource("coin_counter", LoadTexture(UI_COIN_PATH)) == NULL) {
     return false;
   }
 
@@ -87,9 +90,13 @@ Game initGame() {
   size_t entity_count = 0;
   initEntities(entities, &entity_count, current_level.id);
 
+  /* UI */
+  UI ui = initUI();
+
   game.game_state = GAMESTATE_PLAYING;
   game.current_level = current_level;
   game.camera = camera;
+  game.ui = ui;
   game.sky = sky;
   game.water = water;
   game.player = player;
@@ -110,6 +117,7 @@ bool runGame(Game *game) { // Main game loop
   }
 
   /* Updates */
+  updateUI(&game->ui, game->player.entity.health, game->player.coins);
   updateTiles(game);
   updatePlayer(&game->player);
   updateEntities(game);
@@ -125,8 +133,8 @@ bool runGame(Game *game) { // Main game loop
   drawSky(&game->sky);
   drawGame(game);
   drawPlayer(&game->player, game->camera.offset);
-  drawEntities(game, game->camera.offset);
   drawWater(&game->water);
+  drawUI(&game->ui, game->player.entity.health);
 
   return true;
 }
@@ -157,17 +165,7 @@ void updateTiles(Game *game) {
 }
 
 void drawGame(Game *game) {
-  customDraw(&game->camera, &game->current_level.map, &game->player);
-}
-
-void drawEntities(Game *game, Vector2 offset) {
-  if (game->entity_count == 0) {
-   TraceLog(LOG_INFO, "TEST");
-    return;
-  }
-   for (size_t i = 0; i < game->entity_count; ++i) {
-    drawEntity(&game->entities[i], offset);
-  }
+  customDraw(&game->camera, &game->current_level.map, &game->player, game->entities, game->entity_count);
 }
 
 void checkEnemyCollision(Game *game) {
@@ -348,6 +346,7 @@ Player initPlayer(int level_id) {
       .last_jump_time = 0.0f,
       .gravity = PLAYER_GRAVITY,
       .state = PLAYER_STATE_IDLE,
+      .coins = 0,
   };
 
   /* Set player spawn pos */
@@ -372,4 +371,5 @@ Player initPlayer(int level_id) {
 void destroyGame(Game *game) {
   destroyLevel(&game->current_level);
   destroyWater(&game->water);
+  closeUI(&game->ui);
 }

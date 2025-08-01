@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "entity.h"
 
 
 #define CAMERA_X 300
@@ -38,7 +39,7 @@ void drawTileWithOffset(Tile *tile, Vector2 offset) {
   DrawTexture(tile_texture, (int) screen_pos.x, (int) screen_pos.y, WHITE);
 }
 
-void customDraw(CustomCamera *camera, Map *map, Player *player) {
+void customDraw(CustomCamera *camera, Map *map, Player *player, Entity* entities, size_t entity_count) {
   boxTargetCamera(camera, player);
   
   drawAnimatedGroup(camera, &map->bg_palm_group);
@@ -47,6 +48,12 @@ void customDraw(CustomCamera *camera, Map *map, Player *player) {
   drawGroup(camera, &map->decoration_tiles);
   drawGroup(camera, &map->crates_group);  
   //drawGroup(camera, &map->constraint_group); // Til debug af constraints
+  
+  /* Tegn entities */
+  for(size_t i = 0; i < entity_count; ++i) {
+    drawEntity(&entities[i], camera->offset);
+  }
+  
   drawAnimatedGroup(camera, &map->fg_palm_group); 
 }
 

@@ -28,6 +28,8 @@ add_executable(${PROJECT_NAME}
   src/background.h
   src/audio.c
   src/audio.h
+  src/ui.c
+  src/ui.h
 )
 
 target_link_libraries(${PROJECT_NAME}

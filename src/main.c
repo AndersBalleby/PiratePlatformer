@@ -36,7 +36,7 @@ int main(void) {
       }
 
       if(show_fps)
-        DrawFPS(20, 20);
+        DrawFPS(1180, 20);
 
       ClearBackground(BLACK);
       EndDrawing();

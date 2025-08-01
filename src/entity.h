@@ -48,6 +48,7 @@ typedef struct Entity {
 typedef struct Player {
   Animation *animations[4]; //idle, running, falling, jumping
   Entity entity; /* Indeholder members fra entity */
+  size_t coins;
   bool on_ground;
   bool on_ceiling;
   float last_jump_time;

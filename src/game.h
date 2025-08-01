@@ -5,6 +5,7 @@
 #include "level.h"
 #include "entity.h"
 #include "tile.h"
+#include "ui.h"
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -19,10 +20,11 @@ typedef struct Game {
   GameState game_state;
   Level current_level;
   CustomCamera camera;
+  UI ui;
   Sky sky;
   Water water;
   Player player;
-  Entity entities[15];
+  Entity entities[MAX_ENTITIES];
   size_t entity_count;
 } Game;
 
@@ -52,6 +54,5 @@ bool checkCoinCollision(Game *game);
 /* Entities */
 void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count, int level_id);
 void updateEntities(Game *game);
-void drawEntities(Game *game, Vector2 offset);
 void checkEnemyConstraints(Game *game);
 void checkEnemyCollision(Game *game);

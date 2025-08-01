@@ -1,5 +1,8 @@
 #pragma once
 
+/* FONT */
+#define FONT_PATH "../resources/ui/ARCADEPI.TTF"
+
 /* CSV FILER */
 #define CSV_PATH_TERRAIN      "../levels/%d/level_%d_terrain.csv"
 #define CSV_PATH_GRASS        "../levels/%d/level_%d_grass.csv"
@@ -54,3 +57,7 @@
 #define SOUND_HIT_PATH "../audio/effects/hit.wav"
 #define SOUND_JUMP_PATH "../audio/effects/jump.wav"
 #define SOUND_STOMP_PATH "../audio/effects/stomp.wav"
+
+/* UI */
+#define UI_HEALTH_BAR_PATH "../resources/ui/health_bar.png"
+#define UI_COIN_PATH "../resources/ui/coin.png"
