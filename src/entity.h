@@ -70,6 +70,7 @@ void killEntity(Entity *entity);
 void updatePlayer(Player *player);
 Vector2 getPlayerSpawnPos(int level_id);
 void drawPlayer(Player *player, Vector2 offset);
+void respawnPlayer(Player *player);
 
 /* Input & Physics */
 void handleCoin(Player *player, AnimatedTile *coin);

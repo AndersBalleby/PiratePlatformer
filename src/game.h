@@ -50,6 +50,8 @@ void verticalMovementCollision(Game *game);
 void handleVerticalCollision(Game *game, Tile *tile);
 void handleHorizontalCollision(Game *game, Tile *tile);
 bool checkCoinCollision(Game *game);
+void checkWaterBounds(Game *game);
+
 
 /* Entities */
 void initEntities(Entity out_list[MAX_ENTITIES], size_t *entity_count, int level_id);

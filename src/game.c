@@ -27,7 +27,6 @@ bool loadResources() {
       loadSpritesheet("grass", SPRITESHEET_GRASS, 320, 64) == NULL ||
       loadSpritesheet("coins", SPRITESHEET_COINS, 128, 64) == NULL ||
       loadSpritesheet("constraint", SPRITESHEET_CONSTRAINTS, 128, 64) == NULL)
-    // TODO: COnstraints
     return false;
 
   if (loadAnimation("player_run", ANIMATION_PLAYER_RUN) == NULL ||
@@ -136,6 +135,9 @@ bool runGame(Game *game) { // Main game loop
   drawWater(&game->water);
   drawUI(&game->ui, game->player.entity.health);
 
+  checkWaterBounds(game);
+
+
   return true;
 }
 
@@ -161,6 +163,12 @@ void updateTiles(Game *game) {
       if (anim_tile->tile.resource->is_loaded)
         updateAnimatedTile(anim_tile);
     }
+  }
+}
+
+void checkWaterBounds(Game *game) { 
+  if(game->player.entity.position.y >= GetScreenHeight()) {
+    respawnPlayer(&game->player);
   }
 }
 

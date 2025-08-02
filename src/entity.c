@@ -117,6 +117,12 @@ void reverseEntity(Entity *entity) {
   entity->speed *= -1;
 }
 
+void respawnPlayer(Player *player) {
+  Vector2 pos = getPlayerSpawnPos(1);
+  player->entity.collision_rect.x = pos.x;
+  player->entity.collision_rect.y = pos.y;
+}
+
 void animateEntity(Entity *entity) {
   entity->animation_index = fmod(
       entity->animation_index + ENEMY_ANIMATION_SPEED, ENEMY_MAX_ANIMATIONS);
