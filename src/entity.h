@@ -7,11 +7,12 @@
 /* PLAYER STATS */
 #define PLAYER_JUMP_SPEED    -16
 #define PLAYER_KILL_JUMP_SPEED -12
-#define PLAYER_JUMP_COOLDOWN 0.20f
+#define PLAYER_JUMP_COOLDOWN 0.3
 #define PLAYER_GRAVITY 0.8f
 #define PLAYER_SPEED 8.0f
 #define PLAYER_MAX_HEALTH 5
 #define PLAYER_ANIMATION_SPEED 0.13
+
 
 /* ENEMY STATS */
 #define ENEMY_MAX_HEALTH 1
@@ -51,7 +52,7 @@ typedef struct Player {
   size_t coins;
   bool on_ground;
   bool on_ceiling;
-  float last_jump_time;
+  double last_jump_time;
   float gravity;
   PlayerState state;
 } Player;

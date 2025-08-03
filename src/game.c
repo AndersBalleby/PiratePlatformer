@@ -6,6 +6,7 @@
 #include "files.h"
 #include "level.h"
 #include "map.h"
+#include "particles.h"
 #include "paths.h"
 #include "resources.h"
 #include "tile.h"
@@ -100,7 +101,9 @@ Game initGame() {
   game.water = water;
   game.player = player;
   game.entity_count = entity_count;
-  
+ 
+  initParticles();
+
   /* Copy entity structs */
   for(size_t i = 0; i < entity_count; ++i) {
     game.entities[i] = entities[i];
@@ -121,6 +124,7 @@ bool runGame(Game *game) { // Main game loop
   updatePlayer(&game->player);
   updateEntities(game);
   updateWater(&game->water);
+  tickParticles();
 
   /* Collision */
   horizontalMovementCollision(game);
@@ -133,8 +137,9 @@ bool runGame(Game *game) { // Main game loop
   drawGame(game);
   drawPlayer(&game->player, game->camera.offset);
   drawWater(&game->water);
+  drawParticles(game->camera.offset);
   drawUI(&game->ui, game->player.entity.health);
-
+  
   checkWaterBounds(game);
 
 
@@ -266,7 +271,6 @@ void verticalMovementCollision(Game *game) {
   Map *map = &game->current_level.map;
 
   applyGravity(player);
-  player->on_ground = false;
 
   TileGroup coll_tiles = map->collision_tiles;
   size_t i = 0;
@@ -311,6 +315,14 @@ void handleVerticalCollision(Game *game, Tile *tile) {
   if (CheckCollisionRecs(tile->collision_rect, *player_rect)) {
     if (player_direction->y > 0) {
       player_rect->y = tile->collision_rect.y - player_rect->height;
+      if(!player->on_ground) {
+        Vector2 offset = {15, 15};
+      
+        spawnParticle(PARTICLE_LAND, (Vector2) {
+          player_rect->x - offset.x,
+          (player_rect->y + (56.0f / 2.0f) - offset.y),
+        });
+      }
 
       player->on_ground = true;
       player_direction->y = 0;
@@ -351,7 +363,7 @@ Player initPlayer(int level_id) {
       .entity = createEntity(PLAYER, (Vector2) {0,0}),
       .on_ground = false,
       .on_ceiling = false,
-      .last_jump_time = 0.0f,
+      .last_jump_time = 0.0,
       .gravity = PLAYER_GRAVITY,
       .state = PLAYER_STATE_IDLE,
       .coins = 0,

@@ -50,6 +50,11 @@
 #define ANIMATION_PALM_LARGE "../resources/terrain/palm_large"
 #define ANIMATION_PALM_SMALL "../resources/terrain/palm_small"
 
+/* PARTICLES */
+#define ANIMATION_PARTICLE_JUMP "../resources/character/dust_particles/jump"
+#define ANIMATION_PARTICLE_LAND "../resources/character/dust_particles/land"
+#define ANIMATION_PARTICLE_RUN  "../resources/character/dust_particles/run"
+
 /* SOUNDS & MUSIC */
 #define MUSIC_LEVEL_PATH "../audio/level_music.wav"
 #define MUSIC_OVERWORLD_PATH "../audio/overworld_music.wav"

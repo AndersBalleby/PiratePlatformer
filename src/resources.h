@@ -39,7 +39,7 @@ typedef struct Animation {
   size_t count;
 } Animation;
 
-#define MAX_ANIMATIONS 15
+#define MAX_ANIMATIONS 18
 typedef struct AnimationCollection {
   Animation animations[MAX_ANIMATIONS];
   size_t count;

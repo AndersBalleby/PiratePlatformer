@@ -1,6 +1,7 @@
 #include "entity.h"
 #include "audio.h"
 #include "files.h"
+#include "particles.h"
 #include "paths.h"
 #include "resources.h"
 #include <math.h>
@@ -42,7 +43,7 @@ Entity createEntity(EntityType type, Vector2 pos) {
                "[ENTITY] Kunne ikke finde animation til enemy entity");
       return (Entity){.animation = NULL};
     }
-    
+
     ret.speed = ENEMY_SPEED;
     ret.health = ENEMY_MAX_HEALTH;
     ret.animation_index = 0;
@@ -79,6 +80,7 @@ void updatePlayer(Player *player) {
 }
 
 void getPlayerInput(Player *player) {
+  double now = GetTime();
   if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
     player->entity.direction.x = -1;
     player->entity.on_right = false;
@@ -90,13 +92,15 @@ void getPlayerInput(Player *player) {
   }
 
   if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) &&
-      player->on_ground) {
+      player->on_ground && now - player->last_jump_time >= PLAYER_JUMP_COOLDOWN) {
+    
     jump(player);
+    player->last_jump_time = now;
   }
 }
 
-void updateEntity(Entity *entity) { 
-  if(!entity->alive)
+void updateEntity(Entity *entity) {
+  if (!entity->alive)
     return;
 
   animateEntity(entity);
@@ -105,17 +109,11 @@ void updateEntity(Entity *entity) {
   entity->position.x = entity->collision_rect.x;
 }
 
-void killEntity(Entity *entity) {
-  entity->alive = false;
-}
+void killEntity(Entity *entity) { entity->alive = false; }
 
-void moveEntity(Entity *entity) {
-  entity->collision_rect.x += entity->speed;
-}
+void moveEntity(Entity *entity) { entity->collision_rect.x += entity->speed; }
 
-void reverseEntity(Entity *entity) {
-  entity->speed *= -1;
-}
+void reverseEntity(Entity *entity) { entity->speed *= -1; }
 
 void respawnPlayer(Player *player) {
   Vector2 pos = getPlayerSpawnPos(1);
@@ -153,7 +151,15 @@ void updatePlayerState(Player *player) {
   }
 }
 
-void jump(Player *player) { 
+void jump(Player *player) {
+  if (player->entity.on_right)
+    spawnParticle(PARTICLE_JUMP,
+                  (Vector2){player->entity.collision_rect.x,
+                            player->entity.collision_rect.y + 25});
+  else
+    spawnParticle(PARTICLE_JUMP,
+                  (Vector2){player->entity.collision_rect.x + (56.0f / 2.0f),
+                            player->entity.collision_rect.y + 25});
   player->entity.direction.y = PLAYER_JUMP_SPEED;
   playSound(SOUND_JUMP);
 }
@@ -208,7 +214,7 @@ void drawPlayer(Player *player, Vector2 offset) {
 }
 
 void handleCoin(Player *player, AnimatedTile *coin) {
-  if(strcmp(coin->animation->id, "coins_gold") == 0) {
+  if (strcmp(coin->animation->id, "coins_gold") == 0) {
     player->coins += 5;
   } else {
     player->coins++;
@@ -222,7 +228,7 @@ void drawEntity(Entity *entity, Vector2 offset) {
   if (entity == NULL)
     return;
 
-  if(!entity->alive)
+  if (!entity->alive)
     return;
 
   Texture2D current_texture =

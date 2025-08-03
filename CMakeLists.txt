@@ -30,6 +30,8 @@ add_executable(${PROJECT_NAME}
   src/audio.h
   src/ui.c
   src/ui.h
+  src/particles.c
+  src/particles.h
 )
 
 target_link_libraries(${PROJECT_NAME}
