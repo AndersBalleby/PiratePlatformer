@@ -142,7 +142,6 @@ bool runGame(Game *game) { // Main game loop
   
   checkWaterBounds(game);
 
-
   return true;
 }
 

@@ -54,6 +54,8 @@
 #define ANIMATION_PARTICLE_JUMP "../resources/character/dust_particles/jump"
 #define ANIMATION_PARTICLE_LAND "../resources/character/dust_particles/land"
 #define ANIMATION_PARTICLE_RUN  "../resources/character/dust_particles/run"
+#define ANIMATION_PARTICLE_ENEMY_DEATH "../resources/enemy/explosion"
+
 
 /* SOUNDS & MUSIC */
 #define MUSIC_LEVEL_PATH "../audio/level_music.wav"

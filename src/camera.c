@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "entity.h"
+#include <raylib.h>
 
 
 #define CAMERA_X 300
@@ -52,6 +53,7 @@ void customDraw(CustomCamera *camera, Map *map, Player *player, Entity* entities
   /* Tegn entities */
   for(size_t i = 0; i < entity_count; ++i) {
     drawEntity(&entities[i], camera->offset);
+    // til debug : DrawRectangle(entities[i].collision_rect.x - camera->offset.x, entities[i].collision_rect.y - camera->offset.y, 51, 46, RED);
   }
   
   drawAnimatedGroup(camera, &map->fg_palm_group); 

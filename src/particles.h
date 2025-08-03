@@ -5,10 +5,10 @@ typedef enum ParticleType {
   PARTICLE_JUMP,
   PARTICLE_LAND,
   PARTICLE_RUN,
+  PARTICLE_ENEMY_DEATH,
 } ParticleType;
 
 typedef struct Particle {
-  Resource *resource;
   Animation *animation;
   Vector2 position;
   float animation_index;

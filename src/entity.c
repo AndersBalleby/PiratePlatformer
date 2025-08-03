@@ -109,7 +109,14 @@ void updateEntity(Entity *entity) {
   entity->position.x = entity->collision_rect.x;
 }
 
-void killEntity(Entity *entity) { entity->alive = false; }
+void killEntity(Entity *entity) { 
+  spawnParticle(PARTICLE_ENEMY_DEATH, (Vector2) {
+    .x = entity->collision_rect.x - 125,
+    .y = entity->collision_rect.y - 25,
+  });
+
+  entity->alive = false; 
+}
 
 void moveEntity(Entity *entity) { entity->collision_rect.x += entity->speed; }
 
