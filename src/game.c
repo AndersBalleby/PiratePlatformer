@@ -192,6 +192,12 @@ void checkEnemyCollision(Game *game) {
         killEntity(entity);
         player->entity.direction.y = PLAYER_KILL_JUMP_SPEED; // lille hop
         playSound(SOUND_STOMP);
+      } else {
+        if(!player->is_invincible && entity->alive) {
+          player->invincibility_frames = 120;
+          player->is_invincible = true;
+          player->entity.health--;
+        }
       }
     }
   }
@@ -362,6 +368,8 @@ Player initPlayer(int level_id) {
       .entity = createEntity(PLAYER, (Vector2) {0,0}),
       .on_ground = false,
       .on_ceiling = false,
+      .invincibility_frames = 120,
+      .is_invincible = false,
       .last_jump_time = 0.0,
       .gravity = PLAYER_GRAVITY,
       .state = PLAYER_STATE_IDLE,

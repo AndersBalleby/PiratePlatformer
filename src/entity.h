@@ -52,6 +52,8 @@ typedef struct Player {
   size_t coins;
   bool on_ground;
   bool on_ceiling;
+  int invincibility_frames;
+  bool is_invincible;
   double last_jump_time;
   float gravity;
   PlayerState state;
@@ -72,6 +74,7 @@ void updatePlayer(Player *player);
 Vector2 getPlayerSpawnPos(int level_id);
 void drawPlayer(Player *player, Vector2 offset);
 void respawnPlayer(Player *player);
+void setInvincible(Player *player);
 
 /* Input & Physics */
 void handleCoin(Player *player, AnimatedTile *coin);

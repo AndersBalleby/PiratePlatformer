@@ -19,7 +19,7 @@ void initParticles(void) {
   particle_animations[PARTICLE_ENEMY_DEATH] = loadAnimation("particle_enemy_death", ANIMATION_PARTICLE_ENEMY_DEATH);
 }
 
-#define ANIMATION_SPEED 0.15f
+#define ANIMATION_SPEED 0.30f
 void tickParticles(void) {
   for (size_t i = 0; i < MAX_PARTICLES; ++i) {
     if (particle_arr[i].active && particle_arr[i].animation != NULL) {

@@ -74,6 +74,14 @@ void updatePlayer(Player *player) {
   getPlayerInput(player);
   updatePlayerState(player);
   animatePlayer(player);
+  if(player->is_invincible) {
+    player->invincibility_frames--;
+
+    if(player->invincibility_frames <= 0) {
+      player->invincibility_frames = 0;
+      player->is_invincible = false;
+    }
+  }
 
   player->entity.position.x = player->entity.collision_rect.x;
   player->entity.position.y = player->entity.collision_rect.y;
@@ -210,14 +218,42 @@ void drawPlayer(Player *player, Vector2 offset) {
   Vector2 screen_pos = {player->entity.position.x - offset.x,
                         player->entity.position.y - offset.y + y_offset};
 
-  Rectangle source = {0.0f, 0.0f, (float)-(current_texture.width),
-                      (float)current_texture.height};
+  float source_width = !player->entity.on_right ? -(float)current_texture.width : (float)current_texture.width;
 
-  if (player->entity.on_right) {
-    DrawTexture(current_texture, screen_pos.x, screen_pos.y, WHITE);
-  } else {
-    DrawTextureRec(current_texture, source, screen_pos, WHITE);
+
+  Rectangle source = {
+    .x = 0.0f,
+    .y = 0.0f,
+    .width = source_width,
+    .height = (float) current_texture.height,
+  };
+
+
+  Rectangle dest = {
+    .x = screen_pos.x,
+    .y = screen_pos.y,
+    .width = (float) current_texture.width,
+    .height = (float) current_texture.height,
+  };
+
+  Vector2 origin = {0.0f, 0.0f};
+  float rotation = 0.0f;
+
+  Color tint = WHITE;
+  if(player->is_invincible) {
+    float wave = sinf(GetTime() * 20.0f);
+    int alpha = 150 + (int) (105 * wave);
+    if(alpha < 50) alpha = 50;
+    tint.a = (unsigned char) alpha;
   }
+
+  DrawTexturePro(current_texture,
+                 source,
+                 dest,
+                 origin,
+                 rotation,
+                 tint
+  );
 }
 
 void handleCoin(Player *player, AnimatedTile *coin) {
